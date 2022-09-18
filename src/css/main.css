@@ -17,11 +17,8 @@ non-comercial, personal use */
 body {
   z-index: 1;
   display: grid;
-  grid-template-columns: 3;
-  grid-template-rows: 3;
-  height: 100vh;
-  width: 100vw;
-  padding-top: 2em;
+  height: 97vh;
+  width: 97vw;
   flex-direction: column;
   justify-content: center;
   align-content: center;
@@ -46,18 +43,44 @@ body {
   grid-column: 2;
   font-family: "abnes";
   letter-spacing: 0.1px;
+  margin-bottom: 13em;
   font-size: 40px;
 }
 
-
-.sort_button {
+.button_container {
+  z-index: 1;
+  display: grid;
   grid-row: 3;
   grid-column: 2;
+  align-items: stretch;
+  justify-content: center;
+  margin-top: 14em;
+}
+
+.merge_position {
+  grid-row: 1;
+  grid-column: 1;
+}
+
+.quick_position {grid-row: 1;
+  grid-column: 2;}
+
+.bubble_position {grid-row: 1;
+  grid-column: 3;}
+
+.heap_position {grid-row: 1;
+  grid-column: 4;}
+
+.new_array_position {grid-row: 1;
+  margin: 20px;
+  grid-column: 7;}
+
+.sort_button {
+  margin: 10px;
   margin-bottom: 50px;
   font-family: "abnes";
   padding: 10px;
   border-radius: 5%;
-  cursor: cell;
   color: #f2f8f4;
   letter-spacing: 5px;
   font-size: 14px;
