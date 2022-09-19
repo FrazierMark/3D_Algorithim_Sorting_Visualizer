@@ -2,6 +2,13 @@ import '../css/main.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import * as dat from 'lil-gui';
+import Experience from './Experience';
+
+
+// Canvas
+const canvas = new Experience(document.querySelector('canvas.webgl'))
+
+
 // // Calls init() on load
 // document.addEventListener('DOMContentLoaded', function () {
 //     init();
@@ -367,6 +374,4 @@ import * as dat from 'lil-gui';
 // Some of this is derived from Bruno Simon's 3JS Journey, 
 // Source: https://threejs-journey.com/
 
-// Canvas
-const canvas = document.querySelector('canvas.webgl')
 
