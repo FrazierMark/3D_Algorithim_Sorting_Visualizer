@@ -1,12 +1,8 @@
 import '../css/main.css';
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import * as dat from 'lil-gui';
-import Experience from './Experience';
-
-
-// Canvas
-const canvas = new Experience(document.querySelector('canvas.webgl'))
+// import * as THREE from 'three';
+// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+// import * as dat from 'lil-gui';
+// import Experience from './Experience';
 
 
 // // Calls init() on load
@@ -367,11 +363,197 @@ const canvas = new Experience(document.querySelector('canvas.webgl'))
 
 
 
-/*
- * WebGL / ThreeJS - Background Animation
+// import './style.css'
+import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import * as dat from 'lil-gui'
+import { PlaneGeometry } from 'three'
+
+/**
+ * Base
+ */
+// Debug
+const gui = new dat.GUI()
+
+
+
+// Canvas
+const canvas = document.querySelector('canvas.webgl')
+
+
+// Scene
+const scene = new THREE.Scene()
+
+
+/**
+ * Lights
+ */
+// Ambient light
+const ambientLight = new THREE.AmbientLight(0xffffff, 2.0)
+gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
+scene.add(ambientLight)
+
+
+/**
+ * Materials
+ */
+// const material = new THREE.MeshStandardMaterial()
+// material.roughness = 0.7
+// gui.add(material, 'metalness').min(0).max(1).step(0.001)
+// gui.add(material, 'roughness').min(0).max(1).step(0.001)
+
+/**
+ * Objects
  */
 
-// Some of this is derived from Bruno Simon's 3JS Journey, 
-// Source: https://threejs-journey.com/
+let group = new THREE.Group();
+group.position.z = 0;
+scene.add(group);
+const BOXES = 10;
+
+// ***** Clipping planes: *****
+const localPlane = new THREE.Plane(new THREE.Vector3(10, -11, 10), 0.8);
+const globalPlane = new THREE.Plane(new THREE.Vector3(0, 10, 0), -0.0102);
+
+for (let i = 0; i < BOXES; i++) {
+
+    const intensity = (i + 1) / BOXES;
+    const w = 0.1;
+    const h = randomNumFromInterval(0.1, 10.0)
+    const minH = 1;
+    const geometry = new THREE.BoxGeometry(w, h * i + minH, w);
+    const material = new THREE.MeshStandardMaterial({
+        color: new THREE.Color(intensity, 0.1, 0.1),
+        side: THREE.DoubleSide,
+
+
+        // ***** Clipping setup (material): *****
+        clippingPlanes: [localPlane],
+        clipShadows: true
+    });
+
+    const object = new THREE.Mesh(geometry, material);
+    object.position.x = (i - 5) * (w + 0.05);
+    object.castShadow = true;
+    object.receiveShadow = true;
+    object.userData = {
+        index: i + 1,
+        intensity: 3
+    };
+
+    group.add(object);
+}
+
+/**
+ * Sizes
+ */
+const sizes = {
+    width: window.innerWidth,
+    height: window.innerHeight
+}
+
+window.addEventListener('resize', () => {
+    // Update sizes
+    sizes.width = window.innerWidth
+    sizes.height = window.innerHeight
+
+    // Update camera
+    camera.aspect = sizes.width / sizes.height
+    camera.updateProjectionMatrix()
+
+    // Update renderer
+    renderer.setSize(sizes.width, sizes.height)
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+})
+
+
+
+/**
+ * Camera
+ */
+// Base camera
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+camera.position.x = 1
+camera.position.y = 1
+camera.position.z = 2
+scene.add(camera)
+
+// Controls
+const controls = new OrbitControls(camera, canvas)
+controls.enableDamping = true
+
+
+/**
+ * Renderer
+ */
+const renderer = new THREE.WebGLRenderer({
+    canvas: canvas
+})
+renderer.setSize(sizes.width, sizes.height)
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+// Simply tells our renderer to handle shadow maps
+renderer.shadowMap.enabled = false
+
+renderer.shadowMap.type = THREE.PCFSoftShadowMap
+
+// ***** Clipping setup (renderer): *****
+const globalPlanes = [globalPlane],
+    Empty = Object.freeze([]);
+renderer.clippingPlanes = globalPlanes; // GUI sets it to globalPlanes
+renderer.localClippingEnabled = true;
+
+let folderGlobal = gui.addFolder('Global Clipping'),
+propsGlobal = {
+
+    get 'Enabled'() {
+        return renderer.clippingPlanes !== Empty;
+    },
+    set 'Enabled'(v) {
+        renderer.clippingPlanes = v ? globalPlanes : Empty;
+    },
+
+    get 'Plane'() {
+        return globalPlane.constant;
+    },
+    set 'Plane'(v) {
+        globalPlane.constant = v;
+    }
+
+};
+
+folderGlobal.add(propsGlobal, 'Enabled');
+folderGlobal.add(propsGlobal, 'Plane', - 0.4, 3);
+
+
+
+
+/**
+ * Animate
+ */
+const clock = new THREE.Clock()
+
+const tick = () => {
+    const elapsedTime = clock.getElapsedTime()
+
+
+    // Update controls
+    controls.update()
+
+    // Render
+    renderer.render(scene, camera)
+
+    // Call tick again on the next frame
+    window.requestAnimationFrame(tick)
+}
+
+tick()
+
+
+// From https://stackoverflow.com/questions/4959975/generate-random-number-between-two-numbers-in-javascript
+function randomNumFromInterval(min, max) {
+    // min and max included
+    return Math.floor(Math.random() * (max - min + 1) + min) / 100;
+}
+
 
 
