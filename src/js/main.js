@@ -383,24 +383,33 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
-
+scene.background = new THREE.Color(0xa0a0a0);
+scene.fog = new THREE.Fog(0xa0a0a0, 50, 50);
 
 /**
  * Lights
  */
+const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444);
+hemiLight.position.set(0, 200, 0);
+scene.add(hemiLight);
+
 // Ambient light
 const ambientLight = new THREE.AmbientLight(0xffffff, 2.0)
 gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
 scene.add(ambientLight)
 
+// Ground
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(2000, 2000), new THREE.MeshPhongMaterial({ color: 0x999999, depthWrite: false }));
+ground.rotation.x = - Math.PI / 2;
+ground.receiveShadow = true;
+ground.position.set(0, 0.0001, 0)
+scene.add(ground);
 
-/**
- * Materials
- */
-// const material = new THREE.MeshStandardMaterial()
-// material.roughness = 0.7
-// gui.add(material, 'metalness').min(0).max(1).step(0.001)
-// gui.add(material, 'roughness').min(0).max(1).step(0.001)
+const grid = new THREE.GridHelper(50, 30, 0x000000, 0x000000);
+grid.material.opacity = 0.2;
+grid.material.transparent = true;
+scene.add(grid);
+
 
 /**
  * Objects
@@ -409,24 +418,23 @@ scene.add(ambientLight)
 let group = new THREE.Group();
 group.position.z = 0;
 scene.add(group);
-const BOXES = 10;
+const BOXES = 100;
 
 // ***** Clipping planes: *****
 const localPlane = new THREE.Plane(new THREE.Vector3(10, -11, 10), 0.8);
-const globalPlane = new THREE.Plane(new THREE.Vector3(0, 10, 0), -0.0102);
+const globalPlane = new THREE.Plane(new THREE.Vector3(0, 10, 0), -0.0);
 
 for (let i = 0; i < BOXES; i++) {
 
-    const intensity = (i + 1) / BOXES;
     const w = 0.1;
     const h = randomNumFromInterval(0.1, 10.0)
     const minH = 1;
     const geometry = new THREE.BoxGeometry(w, h * i + minH, w);
     const material = new THREE.MeshStandardMaterial({
-        color: new THREE.Color(intensity, 0.1, 0.1),
+        // RGB
+        color: new THREE.Color(40, 0.1, 0.1),
+
         side: THREE.DoubleSide,
-
-
         // ***** Clipping setup (material): *****
         clippingPlanes: [localPlane],
         clipShadows: true
