@@ -2,9 +2,6 @@ import '../css/main.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import * as dat from 'lil-gui';
-import vShader from '../../public/shaders/vShader.glsl';
-import fShader from '../../public/shaders/fShader.glsl';
-
 // // Calls init() on load
 // document.addEventListener('DOMContentLoaded', function () {
 //     init();
