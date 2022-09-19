@@ -66,7 +66,7 @@ export default class Environment {
         this.environmentMap.texture = this.resources.items.environmentMapTexture
         this.environmentMap.texture.encoding = THREE.sRGBEncoding
 
-        // Addig EnvironmentMap to the scene for more realistic lighting
+        // Add EnvironmentMap to the scene for more realistic lighting
         this.scene.environment = this.environmentMap.texture
 
 

@@ -3,6 +3,7 @@ import Experience from "../Experience";
 import Environment from './Enviornment';
 import Floor from './Floor.js'
 import Fox from './Fox';
+import BoxArray from './BoxArray';
 
 export default class World {
 
@@ -12,10 +13,10 @@ export default class World {
         this.resources = this.experience.resources
 
         //Test Mesh
-        const testMesh = new THREE.Mesh(
-            new THREE.BoxBufferGeometry(2, 2, 2),
-            new THREE.MeshStandardMaterial()
-        )
+        // const testMesh = new THREE.Mesh(
+        //     new THREE.BoxBufferGeometry(2, 2, 2),
+        //     new THREE.MeshStandardMaterial()
+        // )
 
        // this.scene.add(testMesh)
 
@@ -24,9 +25,11 @@ export default class World {
         this.resources.on('ready', () => {
 
             // Setup
-            this.floor = new Floor()
-            this.fox = new Fox()
+            
+            //this.floor = new Floor()
+            // this.fox = new Fox()
             this.environment = new Environment()
+            this.boxArray = new BoxArray()
         })
 
     }
