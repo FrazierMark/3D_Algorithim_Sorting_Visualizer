@@ -1,4 +1,8 @@
 import '../css/main.css';
+import { getMergeSortAnimations } from './SortingAlgorthims.js';
+const ANIMATION_SPEED_MS = 1;
+const SECONDARY_COLOR = 'red';
+const PRIMARY_COLOR = 'turquoise';
 // import * as THREE from 'three';
 // import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 // import * as dat from 'lil-gui';
@@ -14,7 +18,8 @@ import '../css/main.css';
 // const player1_TurnToken = document.querySelector(".player1_token")
 // const player2_TurnToken = document.querySelector(".player2_token")
 
-// const musicBtn = document.querySelector('.music')
+const mergeBtn = document.querySelector('.merge_position')
+mergeBtn.addEventListener('click', mergeSort)
 // const startResetBtn = document.querySelector(".start_reset")
 // const winLoseDrawMsg = document.querySelector('.win_lose_draw')
 
@@ -369,6 +374,12 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 import { PlaneGeometry } from 'three'
 
+
+
+
+
+
+
 /**
  * Base
  */
@@ -383,6 +394,7 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
+window.scene = scene
 scene.background = new THREE.Color(0xa0a0a0);
 scene.fog = new THREE.Fog(0xa0a0a0, 50, 50);
 
@@ -418,18 +430,22 @@ scene.add(grid);
 let group = new THREE.Group();
 group.position.z = 0;
 scene.add(group);
+
+
+
 const BOXES = 100;
+const stateArray = []
 
 // ***** Clipping planes: *****
 const localPlane = new THREE.Plane(new THREE.Vector3(10, -11, 10), 0.8);
 const globalPlane = new THREE.Plane(new THREE.Vector3(0, 10, 0), -0.0);
 
 for (let i = 0; i < BOXES; i++) {
-
     const w = 0.1;
-    const h = randomNumFromInterval(0.1, 10.0)
+    const h = randomNumFromInterval(0.1, 1000.0)
+    stateArray.push(h)
     const minH = 1;
-    const geometry = new THREE.BoxGeometry(w, h * i + minH, w);
+    const geometry = new THREE.BoxGeometry(w, h, w);
     const material = new THREE.MeshStandardMaterial({
         // RGB
         color: new THREE.Color(40, 0.1, 0.1),
@@ -448,8 +464,8 @@ for (let i = 0; i < BOXES; i++) {
         index: i + 1,
         intensity: 3
     };
-
-    group.add(object);
+    scene.add(object);
+    group.add(object)
 }
 
 /**
@@ -564,4 +580,39 @@ function randomNumFromInterval(min, max) {
 }
 
 
+function mergeSort() {
+    // THIS GETS ALL ANIMATION\ INFORMATION FIRST???
+    const animations = getMergeSortAnimations(stateArray);
 
+    //console.log(group.children[5].geometry.parameters.height)
+    console.log(group.children[5].material.color)
+    // group.children[5].material.color
+
+
+    const arrayBars = group.children
+    for (let i = 0; i < animations.length; i++) {
+        const isColorChange = i % 3 !== 2;
+        if (isColorChange) {
+            const [barOneIdx, barTwoIdx] = animations[i];
+            const barOneStyle = arrayBars[barOneIdx];
+            const barTwoStyle = arrayBars[barTwoIdx];
+            const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
+            setTimeout(() => {
+                barOneStyle.material.color.setHex(0xFF0000);
+                barTwoStyle.material.color.setHex(0x00FF00);
+            }, i * ANIMATION_SPEED_MS);
+        } else {
+            setTimeout(() => {
+                // newHeight is the largerNumber between the 2
+                const [barOneIdx, newHeight] = animations[i];
+                const barOneStyle = group.children[barOneIdx].geometry.parameters
+                //console.log(barOneStyle.geometry.parameters.height)
+                console.log("old HEIGHT ->>>", barOneStyle.height)
+                console.log("supposed new HEIGHT ->>>", newHeight)
+                barOneStyle.height = newHeight
+                console.log("what it should be->>>>", barOneStyle.height)
+                //barOneStyle.height = `${newHeight}px`;
+            }, i * ANIMATION_SPEED_MS);
+        }
+    }
+}
