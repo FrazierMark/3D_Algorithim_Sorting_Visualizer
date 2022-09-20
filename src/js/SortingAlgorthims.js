@@ -41,13 +41,12 @@ function doMerge(
     if (auxiliaryArray[i] <= auxiliaryArray[j]) {
       // We overwrite the value at index k in the original array with the
       // value at index i in the auxiliary array.
-      animations.push([k, i]);
-      // console.log(auxiliaryArray[i])
+      animations.push([i, j]);
       mainArray[k++] = auxiliaryArray[i++];
     } else {
       // We overwrite the value at index k in the original array with the
       // value at index j in the auxiliary array.
-      animations.push([k, auxiliaryArray[j]]);
+      animations.push([j, i]);
       mainArray[k++] = auxiliaryArray[j++];
     }
   }

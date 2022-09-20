@@ -5,9 +5,9 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 
-const ANIMATION_SPEED_MS = 10;
-const SECONDARY_COLOR = 0xFF0000;
-const PRIMARY_COLOR = 0x00FF00;
+const ANIMATION_SPEED_MS = 2000;
+const SECONDARY_COLOR = 0x00FF00;
+const PRIMARY_COLOR = 0x0000FF;
 const mergeBtn = document.querySelector('.merge_position')
 mergeBtn.addEventListener('click', mergeSort)
 
@@ -26,8 +26,6 @@ requestAnimationFrame(animate)
  */
 // Debug
 const gui = new dat.GUI()
-
-
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -227,46 +225,50 @@ function mergeSort() {
     // THIS GETS ALL ANIMATION\ INFORMATION FIRST???
     const animations = getMergeSortAnimations(stateArray);
 
-    //console.log(group.children[5].geometry.parameters.height)
-    //console.log(group.children[5].material.color)
 
-    //console.log(animations)
 
-    const arrayBars = group.children
     for (let i = 0; i < animations.length; i++) {
+        //const arrayBars = group.children
         const isColorChange = i % 3 !== 2;
         if (isColorChange) {
             const [barOneIdx, barTwoIdx] = animations[i];
             //console.log(barOneIdx)
             //console.log(barTwoIdx)
-            const barOne = arrayBars[barOneIdx];
-            const barTwo = arrayBars[barTwoIdx];
+            const barOne = group.children[barOneIdx];
+            const barTwo = group.children[barTwoIdx];
             const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
             setTimeout(() => {
-                barOne.material.color.setHex(0xFF0000);
-                barTwo.material.color.setHex(0x00FF00);
+                barOne.material.color.setHex(color);
+                barTwo.material.color.setHex(color);
             }, i * ANIMATION_SPEED_MS);
         } else {
             setTimeout(() => {
                 // newHeight is the largerNumber between the 2
-                const [barOneIdx, barTwoIdx] = animations[i];
-                //console.log(barOneIdx)
-                //console.log(barTwoIdx)
-
-                const barOneXposition = group.children[barOneIdx].position.x
-                console.log(barOneXposition)
-                const barTwoXposition = group.children[barTwoIdx].position.x
-                console.log(barTwoXposition)
 
 
+                const [oneIdx, twoIdx] = animations[i];
+                console.log("BarONE INDEX", oneIdx)
+                console.log("BARTWO INDEX", twoIdx)
 
-                // barOneStyle.height = newHeight
-                // Move Bar1 to Bar2's position
-                moveObject(barOneXposition, barTwoXposition, group.children[barOneIdx])
+                if (group.children[oneIdx].geometry.parameters.height >= group.children[twoIdx].geometry.parameters.height) {
 
-                moveObject(barTwoXposition, barOneXposition, group.children[barTwoIdx])
+                    console.log(group.children[oneIdx].geometry.parameters.height)
+                    console.log(group.children[twoIdx].geometry.parameters.height)
 
-                // Move Bar2 to Bar1's position
+                    const barOneXposition = group.children[oneIdx].position.x
+                    const barTwoXposition = group.children[twoIdx].position.x
+
+                    moveObject(barOneXposition, barTwoXposition, group.children[oneIdx])
+                    moveObject(barTwoXposition, barOneXposition, group.children[twoIdx])
+
+                    // arrayMove(group.children, twoIdx, oneIdx)
+                    // arrayMove(group.children, oneIdx, twoIdx)
+                    //Update their indexes
+                    // const tempObjet = group.children[twoIdx]
+                    // group.children[twoIdx] = group.children[oneIdx]
+                    // group.children[oneIdx] = tempObjet
+                }
+
 
             }, i * ANIMATION_SPEED_MS);
         }
@@ -274,9 +276,15 @@ function mergeSort() {
 }
 function moveObject(oldPosition, newPosition, object) {
     const tween = new TWEEN.Tween({ x: oldPosition })
-        .to({ x: newPosition }, 100)
+        .to({ x: newPosition }, 10)
         .onUpdate((coords) => {
             object.position.x = coords.x
         });
     tween.start()
+}
+
+function arrayMove(arr, fromIndex, toIndex) {
+    var element = arr[fromIndex];
+    arr.splice(fromIndex, 1);
+    arr.splice(toIndex, 0, element);
 }
