@@ -5,7 +5,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 
-const ANIMATION_SPEED_MS = 1;
+const ANIMATION_SPEED_MS = 10;
 const SECONDARY_COLOR = 'red';
 const PRIMARY_COLOR = 'turquoise';
 const mergeBtn = document.querySelector('.merge_position')
