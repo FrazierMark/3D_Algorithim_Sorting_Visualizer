@@ -6,8 +6,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 
 const ANIMATION_SPEED_MS = 10;
-const SECONDARY_COLOR = 'red';
-const PRIMARY_COLOR = 'turquoise';
+const SECONDARY_COLOR = 0xFF0000;
+const PRIMARY_COLOR = 0x00FF00;
 const mergeBtn = document.querySelector('.merge_position')
 mergeBtn.addEventListener('click', mergeSort)
 
@@ -76,6 +76,7 @@ scene.add(group);
 
 const BOXES = 100;
 const stateArray = []
+const xPositionArray = []
 
 // ***** Clipping planes: *****
 const localPlane = new THREE.Plane(new THREE.Vector3(10, -11, 10), 0.8);
@@ -85,7 +86,6 @@ for (let i = 0; i < BOXES; i++) {
     const w = 0.1;
     const h = randomNumFromInterval(0.1, 1000.0)
     stateArray.push(h)
-    const minH = 1;
     const geometry = new THREE.BoxGeometry(w, h, w);
     const material = new THREE.MeshStandardMaterial({
         // RGB
@@ -221,43 +221,62 @@ function randomNumFromInterval(min, max) {
 }
 
 
+
+
 function mergeSort() {
     // THIS GETS ALL ANIMATION\ INFORMATION FIRST???
     const animations = getMergeSortAnimations(stateArray);
 
     //console.log(group.children[5].geometry.parameters.height)
-    console.log(group.children[5].material.color)
-    // group.children[5].material.color
+    //console.log(group.children[5].material.color)
 
+    //console.log(animations)
 
     const arrayBars = group.children
     for (let i = 0; i < animations.length; i++) {
         const isColorChange = i % 3 !== 2;
         if (isColorChange) {
             const [barOneIdx, barTwoIdx] = animations[i];
-            const barOneStyle = arrayBars[barOneIdx];
-            const barTwoStyle = arrayBars[barTwoIdx];
+            //console.log(barOneIdx)
+            //console.log(barTwoIdx)
+            const barOne = arrayBars[barOneIdx];
+            const barTwo = arrayBars[barTwoIdx];
             const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
             setTimeout(() => {
-                barOneStyle.material.color.setHex(0xFF0000);
-                barTwoStyle.material.color.setHex(0x00FF00);
+                barOne.material.color.setHex(0xFF0000);
+                barTwo.material.color.setHex(0x00FF00);
             }, i * ANIMATION_SPEED_MS);
         } else {
             setTimeout(() => {
                 // newHeight is the largerNumber between the 2
-                const [barOneIdx, newHeight] = animations[i];
+                const [barOneIdx, barTwoIdx] = animations[i];
+                //console.log(barOneIdx)
+                //console.log(barTwoIdx)
 
-                const barOneStyle = group.children[barOneIdx].geometry.parameters
-                console.log(barOneStyle.height)
-                //group.children[barOneIdx].geometry.attributes.position.needsUpdate = true
+                const barOneXposition = group.children[barOneIdx].position.x
+                console.log(barOneXposition)
+                const barTwoXposition = group.children[barTwoIdx].position.x
+                console.log(barTwoXposition)
+
 
 
                 // barOneStyle.height = newHeight
+                // Move Bar1 to Bar2's position
+                moveObject(barOneXposition, barTwoXposition, group.children[barOneIdx])
 
-                group.children[barOneIdx].geometry.attributes.position.needsUpdate = true;
+                moveObject(barTwoXposition, barOneXposition, group.children[barTwoIdx])
 
-                //barOneStyle.height = `${newHeight}px`;
+                // Move Bar2 to Bar1's position
+
             }, i * ANIMATION_SPEED_MS);
         }
     }
+}
+function moveObject(oldPosition, newPosition, object) {
+    const tween = new TWEEN.Tween({ x: oldPosition })
+        .to({ x: newPosition }, 100)
+        .onUpdate((coords) => {
+            object.position.x = coords.x
+        });
+    tween.start()
 }
