@@ -44,9 +44,9 @@ function doMerge(
       animations.push([i, j]);
       mainArray[k++] = auxiliaryArray[i++];
     } else {
-      // We overwrite the value at index k in the original array with the
-      // value at index j in the auxiliary array.
-      animations.push([j, i]);
+     // We overwrite the value at index k in the original array with the
+     // value at index j in the auxiliary array.
+        animations.push([k, i]);
       mainArray[k++] = auxiliaryArray[j++];
     }
   }
@@ -59,7 +59,7 @@ function doMerge(
     animations.push([i, i]);
     // We overwrite the value at index k in the original array with the
     // value at index i in the auxiliary array.
-    animations.push([k, i]);
+    animations.push([i, i]);
     mainArray[k++] = auxiliaryArray[i++];
   }
   while (j <= endIdx) {
@@ -71,7 +71,7 @@ function doMerge(
     animations.push([j, j]);
     // We overwrite the value at index k in the original array with the
     // value at index j in the auxiliary array.
-    animations.push([k, j]);
+    animations.push([j, j]);
     mainArray[k++] = auxiliaryArray[j++];
   }
 }

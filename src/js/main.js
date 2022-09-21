@@ -5,7 +5,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 
-const ANIMATION_SPEED_MS = 2000;
+const ANIMATION_SPEED_MS = 1;
 const SECONDARY_COLOR = 0x00FF00;
 const PRIMARY_COLOR = 0x0000FF;
 const mergeBtn = document.querySelector('.merge_position')
@@ -250,8 +250,8 @@ function mergeSort() {
                 console.log("BarONE INDEX", oneIdx)
                 console.log("BARTWO INDEX", twoIdx)
 
-                if (group.children[oneIdx].geometry.parameters.height >= group.children[twoIdx].geometry.parameters.height) {
-
+                if (group.children[oneIdx].geometry.parameters.height < group.children[twoIdx].geometry.parameters.height) {
+                // if (oneIdx != twoIdx) {
                     console.log(group.children[oneIdx].geometry.parameters.height)
                     console.log(group.children[twoIdx].geometry.parameters.height)
 
@@ -261,8 +261,8 @@ function mergeSort() {
                     moveObject(barOneXposition, barTwoXposition, group.children[oneIdx])
                     moveObject(barTwoXposition, barOneXposition, group.children[twoIdx])
 
-                    // arrayMove(group.children, twoIdx, oneIdx)
-                    // arrayMove(group.children, oneIdx, twoIdx)
+                    //arrayMove(group.children, twoIdx, oneIdx)
+                    //arrayMove(group.children, oneIdx, twoIdx)
                     //Update their indexes
                     // const tempObjet = group.children[twoIdx]
                     // group.children[twoIdx] = group.children[oneIdx]
