@@ -5,7 +5,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 
-const ANIMATION_SPEED_MS = 1;
+const ANIMATION_SPEED_MS = 10;
 const SECONDARY_COLOR = 0x00FF00;
 const PRIMARY_COLOR = 0x0000FF;
 const mergeBtn = document.querySelector('.merge_position')
@@ -82,7 +82,7 @@ const globalPlane = new THREE.Plane(new THREE.Vector3(0, 10, 0), -0.0);
 
 for (let i = 0; i < BOXES; i++) {
     const w = 0.1;
-    const h = randomNumFromInterval(0.1, 1000.0)
+    const h = randomNumFromInterval(100, 1000.0)
     stateArray.push(h)
     const geometry = new THREE.BoxGeometry(w, h, w);
     const material = new THREE.MeshStandardMaterial({
@@ -103,7 +103,7 @@ for (let i = 0; i < BOXES; i++) {
         index: i + 1,
         intensity: 3
     };
-    scene.add(object);
+    //scene.add(object);
     group.add(object)
 }
 
@@ -215,7 +215,7 @@ tick()
 // From https://stackoverflow.com/questions/4959975/generate-random-number-between-two-numbers-in-javascript
 function randomNumFromInterval(min, max) {
     // min and max included
-    return Math.floor(Math.random() * (max - min + 1) + min) / 100;
+    return Math.floor(Math.random() * (max - min) + min) / 100;
 }
 
 
@@ -243,32 +243,36 @@ function mergeSort() {
             }, i * ANIMATION_SPEED_MS);
         } else {
             setTimeout(() => {
-                // newHeight is the largerNumber between the 2
-
-
+                
                 const [oneIdx, twoIdx] = animations[i];
-                console.log("BarONE INDEX", oneIdx)
-                console.log("BARTWO INDEX", twoIdx)
+                // console.log("BarONE INDEX", oneIdx)
+                // console.log("BARTWO INDEX", twoIdx)
 
-                if (group.children[oneIdx].geometry.parameters.height < group.children[twoIdx].geometry.parameters.height) {
-                // if (oneIdx != twoIdx) {
-                    console.log(group.children[oneIdx].geometry.parameters.height)
-                    console.log(group.children[twoIdx].geometry.parameters.height)
+                console.log(group.children[oneIdx].scale.y)
+                //console.log(group.children[twoIdx].geometry.parameters.height)
 
-                    const barOneXposition = group.children[oneIdx].position.x
-                    const barTwoXposition = group.children[twoIdx].position.x
+                const newHeight = group.children[twoIdx].geometry.parameters.height
+                group.children[oneIdx].scale.y = newHeight
 
-                    moveObject(barOneXposition, barTwoXposition, group.children[oneIdx])
-                    moveObject(barTwoXposition, barOneXposition, group.children[twoIdx])
+                console.log(group.children[oneIdx].scale.y)
+                //console.log(group.children[oneIdx].scale.y)
 
-                    //arrayMove(group.children, twoIdx, oneIdx)
-                    //arrayMove(group.children, oneIdx, twoIdx)
-                    //Update their indexes
-                    // const tempObjet = group.children[twoIdx]
-                    // group.children[twoIdx] = group.children[oneIdx]
-                    // group.children[oneIdx] = tempObjet
-                }
+                // group.children[oneIdx].geometry.parameters.height = newHeight
+                // group.children[oneIdx].geometry.parameters.height.needsUpdate = true
 
+
+                //const barOneXposition = group.children[oneIdx].position.x
+                //const barTwoXposition = group.children[twoIdx].position.x
+
+                // moveObject(barOneXposition, barTwoXposition, group.children[oneIdx])
+                // moveObject(barTwoXposition, barOneXposition, group.children[twoIdx])
+
+                //arrayMove(group.children, twoIdx, oneIdx)
+                //arrayMove(group.children, oneIdx, twoIdx)
+                //Update their indexes
+                // const tempObjet = group.children[twoIdx]
+                // group.children[twoIdx] = group.children[oneIdx]
+                // group.children[oneIdx] = tempObjet
 
             }, i * ANIMATION_SPEED_MS);
         }
@@ -287,4 +291,10 @@ function arrayMove(arr, fromIndex, toIndex) {
     var element = arr[fromIndex];
     arr.splice(fromIndex, 1);
     arr.splice(toIndex, 0, element);
+}
+
+function replaceAt(array, index, value) {
+    const ret = array.slice(0);
+    ret[index] = value;
+    return ret;
 }
