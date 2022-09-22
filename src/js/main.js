@@ -74,7 +74,6 @@ scene.add(group);
 
 const BOXES = 100;
 const stateArray = []
-const xPositionArray = []
 
 // ***** Clipping planes: *****
 const localPlane = new THREE.Plane(new THREE.Vector3(10, -11, 10), 0.8);
@@ -197,8 +196,6 @@ const clock = new THREE.Clock()
 
 const tick = () => {
     const elapsedTime = clock.getElapsedTime()
-
-
     // Update controls
     controls.update()
 
@@ -228,14 +225,14 @@ function mergeSort() {
 
 
     for (let i = 0; i < animations.length; i++) {
-        //const arrayBars = group.children
+        const arrayBars = group.children
         const isColorChange = i % 3 !== 2;
         if (isColorChange) {
             const [barOneIdx, barTwoIdx] = animations[i];
             //console.log(barOneIdx)
             //console.log(barTwoIdx)
-            const barOne = group.children[barOneIdx];
-            const barTwo = group.children[barTwoIdx];
+            const barOne = arrayBars[barOneIdx];
+            const barTwo = arrayBars[barTwoIdx];
             const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
             setTimeout(() => {
                 barOne.material.color.setHex(color);
@@ -245,17 +242,20 @@ function mergeSort() {
             setTimeout(() => {
                 
                 const [oneIdx, twoIdx] = animations[i];
-                // console.log("BarONE INDEX", oneIdx)
-                // console.log("BARTWO INDEX", twoIdx)
+                // console.log("FIRST INDEX HEIGHT->>>> ", group.children[oneIdx].geometry.parameters.height)
+                console.log("REPLACEMENT HEIGHT->>>> ", group.children[twoIdx].geometry.parameters.height)
 
-                console.log(group.children[oneIdx].scale.y)
-                //console.log(group.children[twoIdx].geometry.parameters.height)
+                const xPosition = arrayBars[oneIdx].position.x
+                const userIndex = arrayBars[oneIdx].userData.index
 
-                const newHeight = group.children[twoIdx].geometry.parameters.height
-                group.children[oneIdx].scale.y = newHeight
 
-                console.log(group.children[oneIdx].scale.y)
-                //console.log(group.children[oneIdx].scale.y)
+
+
+                const newHeight = arrayBars[twoIdx].geometry.parameters.height
+                group.remove(arrayBars[oneIdx])
+
+                // Create new Geometry mesh and insert in oneIdx's place
+                replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex)
 
                 // group.children[oneIdx].geometry.parameters.height = newHeight
                 // group.children[oneIdx].geometry.parameters.height.needsUpdate = true
@@ -297,4 +297,39 @@ function replaceAt(array, index, value) {
     const ret = array.slice(0);
     ret[index] = value;
     return ret;
+}
+
+Array.prototype.insert = function (index, ...items) {
+    this.splice(index, 0, ...items);
+};
+// var arr = [ 'A', 'B', 'E' ];
+// arr.insert(2, 'C', 'D');
+
+function replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex) {
+    const w = 0.1;
+    const h = newHeight
+    console.log("HEIGHT!->> ", newHeight)
+    const geometry = new THREE.BoxGeometry(w, h, w);
+    const material = new THREE.MeshStandardMaterial({
+        // RGB
+        color: new THREE.Color(40, 0.1, 0.1),
+        side: THREE.DoubleSide,
+        // ***** Clipping setup (material): *****
+        clippingPlanes: [localPlane],
+        clipShadows: true
+    });
+
+    const object = new THREE.Mesh(geometry, material);
+    object.position.x = xPosition;
+    object.position.z = .5
+    object.castShadow = true;
+    object.receiveShadow = true;
+    object.userData = {
+        index: userIndex,
+        intensity: 3
+    };
+    //scene.add(object);
+    group.children.insert(oneIdx, object)
+    // group.attach(object)
+    //console.log("HEIGHT SHOULD BE THE SAME", object.geometry.parameters.height)
 }
