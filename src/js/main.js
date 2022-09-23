@@ -5,7 +5,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 
-const ANIMATION_SPEED_MS = 100;
+const ANIMATION_SPEED_MS = 10;
 const SECONDARY_COLOR = 0x00FF00;
 const PRIMARY_COLOR = 0x0000FF;
 const mergeBtn = document.querySelector('.merge_position')
@@ -69,8 +69,6 @@ scene.add(grid);
 let group = new THREE.Group();
 group.position.z = 0;
 scene.add(group);
-
-//calculateTotalHeight(group.children)
 
 const BOXES = 100;
 const stateArray = []
@@ -202,7 +200,6 @@ const tick = () => {
     // Call tick again on the next frame
     window.requestAnimationFrame(tick)
 }
-
 tick()
 
 
@@ -212,10 +209,7 @@ function randomNumFromInterval(min, max) {
     return Math.floor(Math.random() * (max - min) + min) / 100;
 }
 
-
 function mergeSort() {
-    // THIS GETS ALL ANIMATION\ INFORMATION FIRST???
-    //calculateTotalHeight(group.children)
 
     const animations = getMergeSortAnimations(stateArray);
     for (let i = 0; i < animations.length; i++) {
@@ -225,7 +219,6 @@ function mergeSort() {
             const [barOneIdx, barTwoIdx] = animations[i];
 
             const barOne = arrayBars[barOneIdx];
-            console.log(barOneIdx)
             const barTwo = arrayBars[barTwoIdx];
             const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
             setTimeout(() => {
@@ -235,16 +228,13 @@ function mergeSort() {
         } else {
             setTimeout(() => {
                 const [oneIdx, twoIdx] = animations[i];
-                console.log(oneIdx)
 
                 const xPosition = arrayBars[oneIdx].position.x
                 const userIndex = arrayBars[oneIdx].userData.index
 
                 const newHeight = twoIdx
-                // group.remove(group.children[oneIdx])
 
                 replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex)
-
             }, i * ANIMATION_SPEED_MS);
         }
     }
@@ -257,21 +247,6 @@ function moveObject(oldPosition, newPosition, object) {
             object.position.x = coords.x
         });
     tween.start()
-}
-
-Array.prototype.insert = function (index, ...items) {
-    this.splice(index, 0, ...items);
-};
-
-// var arr = [ 'A', 'B', 'E' ];
-// arr.insert(2, 'C', 'D');
-
-function calculateTotalHeight(array) {
-    let totalHeight = 0
-    for (let i = 0; i < array.length; i++) {
-        totalHeight += group.children[i].geometry.parameters.height
-    }
-    console.log(totalHeight)
 }
 
 function replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex) {
@@ -296,9 +271,7 @@ function replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex) {
         index: userIndex,
         intensity: 3
     };
-    // scene.add(object);
 
-    //group.children.insert(oneIdx, object)
     group.children.splice(oneIdx, 1, object)
-    //group.attach(object)
+
 }
