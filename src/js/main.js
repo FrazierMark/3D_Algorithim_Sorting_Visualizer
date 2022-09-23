@@ -5,7 +5,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 
-const ANIMATION_SPEED_MS = 10;
+const ANIMATION_SPEED_MS = 100;
 const SECONDARY_COLOR = 0x00FF00;
 const PRIMARY_COLOR = 0x0000FF;
 const mergeBtn = document.querySelector('.merge_position')
@@ -70,7 +70,7 @@ let group = new THREE.Group();
 group.position.z = 0;
 scene.add(group);
 
-
+//calculateTotalHeight(group.children)
 
 const BOXES = 100;
 const stateArray = []
@@ -144,7 +144,6 @@ scene.add(camera)
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
 
-
 /**
  * Renderer
  */
@@ -187,8 +186,6 @@ folderGlobal.add(propsGlobal, 'Enabled');
 folderGlobal.add(propsGlobal, 'Plane', - 0.4, 3);
 
 
-
-
 /**
  * Animate
  */
@@ -216,22 +213,19 @@ function randomNumFromInterval(min, max) {
 }
 
 
-
-
 function mergeSort() {
     // THIS GETS ALL ANIMATION\ INFORMATION FIRST???
+    //calculateTotalHeight(group.children)
+
     const animations = getMergeSortAnimations(stateArray);
-
-
-
     for (let i = 0; i < animations.length; i++) {
         const arrayBars = group.children
         const isColorChange = i % 3 !== 2;
         if (isColorChange) {
             const [barOneIdx, barTwoIdx] = animations[i];
-            //console.log(barOneIdx)
-            //console.log(barTwoIdx)
+
             const barOne = arrayBars[barOneIdx];
+            console.log(barOneIdx)
             const barTwo = arrayBars[barTwoIdx];
             const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
             setTimeout(() => {
@@ -240,44 +234,22 @@ function mergeSort() {
             }, i * ANIMATION_SPEED_MS);
         } else {
             setTimeout(() => {
-                
                 const [oneIdx, twoIdx] = animations[i];
-                // console.log("FIRST INDEX HEIGHT->>>> ", group.children[oneIdx].geometry.parameters.height)
-                console.log("REPLACEMENT HEIGHT->>>> ", group.children[twoIdx].geometry.parameters.height)
+                console.log(oneIdx)
 
                 const xPosition = arrayBars[oneIdx].position.x
                 const userIndex = arrayBars[oneIdx].userData.index
 
+                const newHeight = twoIdx
+                // group.remove(group.children[oneIdx])
 
-
-
-                const newHeight = arrayBars[twoIdx].geometry.parameters.height
-                group.remove(arrayBars[oneIdx])
-
-                // Create new Geometry mesh and insert in oneIdx's place
                 replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex)
-
-                // group.children[oneIdx].geometry.parameters.height = newHeight
-                // group.children[oneIdx].geometry.parameters.height.needsUpdate = true
-
-
-                //const barOneXposition = group.children[oneIdx].position.x
-                //const barTwoXposition = group.children[twoIdx].position.x
-
-                // moveObject(barOneXposition, barTwoXposition, group.children[oneIdx])
-                // moveObject(barTwoXposition, barOneXposition, group.children[twoIdx])
-
-                //arrayMove(group.children, twoIdx, oneIdx)
-                //arrayMove(group.children, oneIdx, twoIdx)
-                //Update their indexes
-                // const tempObjet = group.children[twoIdx]
-                // group.children[twoIdx] = group.children[oneIdx]
-                // group.children[oneIdx] = tempObjet
 
             }, i * ANIMATION_SPEED_MS);
         }
     }
 }
+
 function moveObject(oldPosition, newPosition, object) {
     const tween = new TWEEN.Tween({ x: oldPosition })
         .to({ x: newPosition }, 10)
@@ -287,32 +259,28 @@ function moveObject(oldPosition, newPosition, object) {
     tween.start()
 }
 
-function arrayMove(arr, fromIndex, toIndex) {
-    var element = arr[fromIndex];
-    arr.splice(fromIndex, 1);
-    arr.splice(toIndex, 0, element);
-}
-
-function replaceAt(array, index, value) {
-    const ret = array.slice(0);
-    ret[index] = value;
-    return ret;
-}
-
 Array.prototype.insert = function (index, ...items) {
     this.splice(index, 0, ...items);
 };
+
 // var arr = [ 'A', 'B', 'E' ];
 // arr.insert(2, 'C', 'D');
+
+function calculateTotalHeight(array) {
+    let totalHeight = 0
+    for (let i = 0; i < array.length; i++) {
+        totalHeight += group.children[i].geometry.parameters.height
+    }
+    console.log(totalHeight)
+}
 
 function replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex) {
     const w = 0.1;
     const h = newHeight
-    console.log("HEIGHT!->> ", newHeight)
     const geometry = new THREE.BoxGeometry(w, h, w);
     const material = new THREE.MeshStandardMaterial({
         // RGB
-        color: new THREE.Color(40, 0.1, 0.1),
+        color: new THREE.Color(90, 10.1, 0.1),
         side: THREE.DoubleSide,
         // ***** Clipping setup (material): *****
         clippingPlanes: [localPlane],
@@ -328,8 +296,9 @@ function replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex) {
         index: userIndex,
         intensity: 3
     };
-    //scene.add(object);
-    group.children.insert(oneIdx, object)
-    // group.attach(object)
-    //console.log("HEIGHT SHOULD BE THE SAME", object.geometry.parameters.height)
+    // scene.add(object);
+
+    //group.children.insert(oneIdx, object)
+    group.children.splice(oneIdx, 1, object)
+    //group.attach(object)
 }
