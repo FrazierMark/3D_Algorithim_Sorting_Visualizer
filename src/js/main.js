@@ -7,7 +7,7 @@ import * as dat from 'lil-gui'
 
 
 const ANIMATION_SPEED_MS = 10;
-const SECONDARY_COLOR = 0x00FF00;
+const SECONDARY_COLOR = 0xd1ec4a;
 const PRIMARY_COLOR = 0x0000FF;
 const mergeBtn = document.querySelector('.merge_position')
 const newArrayBtn = document.querySelector('.new_array_position')
@@ -28,8 +28,6 @@ function animate(time) {
 requestAnimationFrame(animate)
 
 
-
-
 /**
  * Base
  */
@@ -43,30 +41,37 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 window.scene = scene
-scene.background = new THREE.Color(0xa0a0a0);
-scene.fog = new THREE.Fog(0xa0a0a0, 500, 1000);
+//scene.background = new THREE.Color(0xffe3f2fd);
+scene.fog = new THREE.Fog(0xffe3f2fd, 10, 50);
 
 /**
  * Lights
  */
-const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444);
-hemiLight.position.set(0, 200, 0);
-scene.add(hemiLight);
+// const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444);
+// hemiLight.position.set(0, 200, 0);
+// scene.add(hemiLight);
 
 // Ambient light
-const ambientLight = new THREE.AmbientLight(0xffffff, 2.0)
+const ambientLight = new THREE.AmbientLight(0xffffff)
 gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
 scene.add(ambientLight)
 
+const dirLight1 = new THREE.DirectionalLight(0xffffff);
+dirLight1.position.set(1, 1, 1);
+scene.add(dirLight1);
+
+const dirLight2 = new THREE.DirectionalLight(0x002288);
+dirLight2.position.set(- 1, - 1, - 1);
+scene.add(dirLight2);
 
 
 
 // Ground
-const ground = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), new THREE.MeshPhongMaterial({ color: 0x999999, depthWrite: false }));
-ground.rotation.x = - Math.PI / 2;
-ground.receiveShadow = true;
-ground.position.set(0, 0.0001, 0)
-scene.add(ground);
+// const ground = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), new THREE.MeshPhongMaterial({ color: 0x999999, depthWrite: false }));
+// ground.rotation.x = - Math.PI / 2;
+// ground.receiveShadow = true;
+// ground.position.set(0, 0.0001, 0)
+// scene.add(ground);
 
 const grid = new THREE.GridHelper(500, 500, 0x000000, 0x000000);
 grid.material.opacity = 0.2;
@@ -81,6 +86,7 @@ scene.add(grid);
 let group = new THREE.Group();
 scene.add(group);
 group.position.z = 0;
+//group.position.x = -6
 
 const BOXES = 100;
 let stateArray = []
@@ -96,7 +102,7 @@ for (let i = 0; i < BOXES; i++) {
     const geometry = new THREE.BoxGeometry(w, h, w);
     const material = new THREE.MeshStandardMaterial({
         // RGB
-        color: new THREE.Color(40, 0.1, 0.1),
+        color: new THREE.Color(173, 216, 228),
 
         side: THREE.DoubleSide,
         // ***** Clipping setup (material): *****
@@ -105,7 +111,7 @@ for (let i = 0; i < BOXES; i++) {
     });
 
     const object = new THREE.Mesh(geometry, material);
-    object.position.x = (i - 5) * (w + 0.05);
+    object.position.x = (i - 50) * (w + 0.05);
     object.castShadow = true;
     object.receiveShadow = true;
     object.userData = {
@@ -141,15 +147,15 @@ window.addEventListener('resize', () => {
 })
 
 
-
 /**
  * Camera
  */
 // Base camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.x = 1
-camera.position.y = 1
-camera.position.z = 2
+const camera = new THREE.PerspectiveCamera(60, sizes.width / sizes.height, 0.1, 100)
+camera.position.x = 0
+camera.position.y = 2
+camera.position.z = 10
+///camera.lookAt(group);
 scene.add(camera)
 
 // Controls
@@ -160,13 +166,13 @@ controls.enableDamping = true
  * Renderer
  */
 const renderer = new THREE.WebGLRenderer({
-    canvas: canvas
+    canvas: canvas,
+    antialias: true
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-// Simply tells our renderer to handle shadow maps
-renderer.shadowMap.enabled = false
-
+renderer.shadowMap.enabled = true
+renderer.setClearColor(0xffffff, 0);
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
 // ***** Clipping setup (renderer): *****
@@ -244,9 +250,8 @@ function mergeSort() {
             setTimeout(() => {
                 const [oneIdx, twoIdx] = animations[i];
 
-                const xPosition = arrayBars[oneIdx].position.x
-                const userIndex = arrayBars[oneIdx].userData.index
-
+                const xPosition = group.children[oneIdx].position.x
+                const userIndex = group.children[oneIdx].userData.index
                 const newHeight = twoIdx
 
                 replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex)
@@ -286,16 +291,13 @@ function replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex) {
         index: userIndex,
         intensity: 3
     };
-
     group.children.splice(oneIdx, 1, object)
-
 }
 
 function newArray() {
 
     while (group.children.length)
         group.remove(group.children[0])
-
     stateArray = []
 
     for (let i = 0; i < BOXES; i++) {
@@ -306,7 +308,7 @@ function newArray() {
         const material = new THREE.MeshStandardMaterial({
             // RGB
             color: new THREE.Color(40, 0.1, 0.1),
-
+            flatShading: true,
             side: THREE.DoubleSide,
             // ***** Clipping setup (material): *****
             clippingPlanes: [localPlane],
@@ -314,7 +316,7 @@ function newArray() {
         });
 
         const object = new THREE.Mesh(geometry, material);
-        object.position.x = (i - 5) * (w + 0.05);
+        object.position.x = (i - 50) * (w + 0.05);
         object.castShadow = true;
         object.receiveShadow = true;
         object.userData = {

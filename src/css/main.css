@@ -4,6 +4,7 @@
   left: 0;
   outline: none;
   z-index: -1;
+  background: linear-gradient(35deg, #d1ec4a, #f986ff);
 }
 
 /* font credit - 117studio - Type Foundry and Graphic Design Studio
