@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 
+
 const ANIMATION_SPEED_MS = 10;
 const SECONDARY_COLOR = 0x00FF00;
 const PRIMARY_COLOR = 0x0000FF;
@@ -13,9 +14,10 @@ const newArrayBtn = document.querySelector('.new_array_position')
 const quickBtn = document.querySelector('.quick_position')
 const bubbleBtn = document.querySelector('.bubble_position')
 const heapBtn = document.querySelector('.heap_position')
+const removeArrayBtn = document.querySelector('.remove_position')
 
 mergeBtn.addEventListener('click', mergeSort)
-
+newArrayBtn.addEventListener('click', newArray)
 
 
 // Setup the animation loop.
@@ -24,6 +26,8 @@ function animate(time) {
 	TWEEN.update(time)
 }
 requestAnimationFrame(animate)
+
+
 
 
 /**
@@ -40,7 +44,7 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 window.scene = scene
 scene.background = new THREE.Color(0xa0a0a0);
-scene.fog = new THREE.Fog(0xa0a0a0, 50, 50);
+scene.fog = new THREE.Fog(0xa0a0a0, 500, 1000);
 
 /**
  * Lights
@@ -54,14 +58,17 @@ const ambientLight = new THREE.AmbientLight(0xffffff, 2.0)
 gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
 scene.add(ambientLight)
 
+
+
+
 // Ground
-const ground = new THREE.Mesh(new THREE.PlaneGeometry(2000, 2000), new THREE.MeshPhongMaterial({ color: 0x999999, depthWrite: false }));
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), new THREE.MeshPhongMaterial({ color: 0x999999, depthWrite: false }));
 ground.rotation.x = - Math.PI / 2;
 ground.receiveShadow = true;
 ground.position.set(0, 0.0001, 0)
 scene.add(ground);
 
-const grid = new THREE.GridHelper(50, 30, 0x000000, 0x000000);
+const grid = new THREE.GridHelper(500, 500, 0x000000, 0x000000);
 grid.material.opacity = 0.2;
 grid.material.transparent = true;
 scene.add(grid);
@@ -72,11 +79,11 @@ scene.add(grid);
  */
 
 let group = new THREE.Group();
-group.position.z = 0;
 scene.add(group);
+group.position.z = 0;
 
 const BOXES = 100;
-const stateArray = []
+let stateArray = []
 
 // ***** Clipping planes: *****
 const localPlane = new THREE.Plane(new THREE.Vector3(10, -11, 10), 0.8);
@@ -108,6 +115,8 @@ for (let i = 0; i < BOXES; i++) {
     //scene.add(object);
     group.add(object)
 }
+
+
 
 /**
  * Sizes
@@ -229,7 +238,7 @@ function mergeSort() {
             setTimeout(() => {
                 barOne.material.color.setHex(color);
                 barTwo.material.color.setHex(color);
-                console.log(barOne.material.color)
+                //console.log(barOne.material.color)
             }, i * ANIMATION_SPEED_MS);
         } else {
             setTimeout(() => {
@@ -280,4 +289,44 @@ function replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex) {
 
     group.children.splice(oneIdx, 1, object)
 
+}
+
+function newArray() {
+
+    while (group.children.length)
+        group.remove(group.children[0])
+
+    stateArray = []
+
+    for (let i = 0; i < BOXES; i++) {
+        const w = 0.1;
+        const h = randomNumFromInterval(100, 1000.0)
+        stateArray.push(h)
+        const geometry = new THREE.BoxGeometry(w, h, w);
+        const material = new THREE.MeshStandardMaterial({
+            // RGB
+            color: new THREE.Color(40, 0.1, 0.1),
+
+            side: THREE.DoubleSide,
+            // ***** Clipping setup (material): *****
+            clippingPlanes: [localPlane],
+            clipShadows: true
+        });
+
+        const object = new THREE.Mesh(geometry, material);
+        object.position.x = (i - 5) * (w + 0.05);
+        object.castShadow = true;
+        object.receiveShadow = true;
+        object.userData = {
+            index: i + 1,
+            intensity: 3
+        };
+        //scene.add(object);
+        group.add(object)
+    }
+}
+
+function removeArray() {
+    while (group.children.length)
+        group.remove(group.children[0])
 }
