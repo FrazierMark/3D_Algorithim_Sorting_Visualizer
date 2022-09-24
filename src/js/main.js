@@ -1,5 +1,5 @@
 import '../css/main.css';
-import { getMergeSortAnimations } from './SortingAlgorthims.js';
+import { getMergeSortAnimations } from './MergeSort.js';
 import * as TWEEN from '@tweenjs/tween.js'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -9,6 +9,11 @@ const ANIMATION_SPEED_MS = 10;
 const SECONDARY_COLOR = 0x00FF00;
 const PRIMARY_COLOR = 0x0000FF;
 const mergeBtn = document.querySelector('.merge_position')
+const newArrayBtn = document.querySelector('.new_array_position')
+const quickBtn = document.querySelector('.quick_position')
+const bubbleBtn = document.querySelector('.bubble_position')
+const heapBtn = document.querySelector('.heap_position')
+
 mergeBtn.addEventListener('click', mergeSort)
 
 
@@ -224,6 +229,7 @@ function mergeSort() {
             setTimeout(() => {
                 barOne.material.color.setHex(color);
                 barTwo.material.color.setHex(color);
+                console.log(barOne.material.color)
             }, i * ANIMATION_SPEED_MS);
         } else {
             setTimeout(() => {
@@ -255,7 +261,7 @@ function replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex) {
     const geometry = new THREE.BoxGeometry(w, h, w);
     const material = new THREE.MeshStandardMaterial({
         // RGB
-        color: new THREE.Color(90, 10.1, 0.1),
+        color: new THREE.Color(40, 0.1, 0.1),
         side: THREE.DoubleSide,
         // ***** Clipping setup (material): *****
         clippingPlanes: [localPlane],
