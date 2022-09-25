@@ -16,13 +16,15 @@ const mergeSortBtn = document.querySelector('.merge_position')
 const newArrayBtn = document.querySelector('.new_array_position')
 const quickSortBtn = document.querySelector('.quick_position')
 const bubbleSortBtn = document.querySelector('.bubble_position')
-const heapBtn = document.querySelector('.heap_position')
+const heapSortBtn = document.querySelector('.heap_position')
 const removeArrayBtn = document.querySelector('.remove_position')
 
 mergeSortBtn.addEventListener('click', mergeSort)
 quickSortBtn.addEventListener('click', quickSort)
 bubbleSortBtn.addEventListener('click', bubbleSort)
+heapSortBtn.addEventListener('click', heapSort)
 newArrayBtn.addEventListener('click', newArray)
+
 
 
 // Setup the animation loop.
@@ -326,7 +328,10 @@ function bubbleSort() {
             }, i * ANIMATION_SPEED_MS);
         }
     }
+}
 
+function heapSort() {
+    
 }
 
 

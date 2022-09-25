@@ -54,5 +54,4 @@ function quickSort(array, left, right, comparisons) {
             quickSort(array, index, right, comparisons);
         }
     }
-    //return array;
 }
