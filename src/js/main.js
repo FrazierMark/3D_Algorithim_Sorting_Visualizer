@@ -1,25 +1,27 @@
 import '../css/main.css';
 import { getMergeSortComparisons } from './MergeSort.js';
 import { getQuickSortComparisons } from './QuickSort';
+import { getBubbleSortComparisons } from './BubbleSort';
 import * as TWEEN from '@tweenjs/tween.js'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 
 
-const ANIMATION_SPEED_MS = 100;
+const ANIMATION_SPEED_MS = 10;
 const SECONDARY_COLOR = 0x005A5E;
 const PRIMARY_COLOR = 0xCC4B55;
 const PIVOT_COLOR = 0xFFFF00;
 const mergeSortBtn = document.querySelector('.merge_position')
 const newArrayBtn = document.querySelector('.new_array_position')
 const quickSortBtn = document.querySelector('.quick_position')
-const bubbleBtn = document.querySelector('.bubble_position')
+const bubbleSortBtn = document.querySelector('.bubble_position')
 const heapBtn = document.querySelector('.heap_position')
 const removeArrayBtn = document.querySelector('.remove_position')
 
 mergeSortBtn.addEventListener('click', mergeSort)
 quickSortBtn.addEventListener('click', quickSort)
+bubbleSortBtn.addEventListener('click', bubbleSort)
 newArrayBtn.addEventListener('click', newArray)
 
 
@@ -117,7 +119,7 @@ for (let i = 0; i < BOXES; i++) {
     });
 
     const object = new THREE.Mesh(geometry, material);
-    object.position.x = (i - 50) * (w + 0.05);
+    object.position.x = (i - 50) * (w + 0.06);
     object.castShadow = true;
     object.receiveShadow = true;
     object.userData = {
@@ -285,22 +287,48 @@ function quickSort() {
         } else {
             setTimeout(() => {
                 const [oneIdx, twoIdx, pivot] = comparisons[i];
-
                 //update physical position
                 let oneIdxPosition = group.children[oneIdx].position.x
                 let twoIdxPosition = group.children[twoIdx].position.x
-
                 moveObject(oneIdxPosition, twoIdxPosition, group.children[oneIdx])
                 moveObject(twoIdxPosition, oneIdxPosition, group.children[twoIdx])
-
                 // update position within the array 
                 swap(group.children, oneIdx, twoIdx)
-
-
             }, i * ANIMATION_SPEED_MS);
         }
     }
 }
+
+function bubbleSort() {
+    const comparisons = getBubbleSortComparisons(stateArray)
+    for (let i = 0; i < comparisons.length; i++) {
+        const arrayBars = group.children
+        const isColorChange = i % 3 !== 2;
+        if (isColorChange) {
+            const [barOneIdx, barTwoIdx] = comparisons[i];
+            const barOne = group.children[barOneIdx];
+            const barTwo = group.children[barTwoIdx];
+            const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
+            setTimeout(() => {
+                barOne.setColor(color);
+                barTwo.setColor(color);
+            }, i * ANIMATION_SPEED_MS);
+        } else {
+            setTimeout(() => {
+                const [oneIdx, twoIdx] = comparisons[i];
+                //update physical position
+                let oneIdxPosition = group.children[oneIdx].position.x
+                let twoIdxPosition = group.children[twoIdx].position.x
+                moveObject(oneIdxPosition, twoIdxPosition, group.children[oneIdx])
+                moveObject(twoIdxPosition, oneIdxPosition, group.children[twoIdx])
+                // update position within the array 
+                swap(group.children, oneIdx, twoIdx)
+            }, i * ANIMATION_SPEED_MS);
+        }
+    }
+
+}
+
 
 
 function moveObject(oldPosition, newPosition, object) {
@@ -368,7 +396,7 @@ function newArray() {
         });
 
         const object = new THREE.Mesh(geometry, material);
-        object.position.x = (i - 50) * (w + 0.05);
+        object.position.x = (i - 50) * (w + 0.06);
         object.castShadow = true;
         object.receiveShadow = true;
         object.userData = {
