@@ -34,13 +34,11 @@ function heap_root(array, i, comparisons) {
 
 function swap(array, index_A, index_B) {
    var temp = array[index_A];
-
    array[index_A] = array[index_B];
    array[index_B] = temp;
 }
 
 function heapSort(array, comparisons) {
-
    array_length = array.length;
 
    for (var i = Math.floor(array_length / 2); i >= 0; i -= 1) {
@@ -55,7 +53,7 @@ function heapSort(array, comparisons) {
 
       swap(array, 0, i);
       array_length--;
-
+      
       heap_root(array, 0, comparisons);
    }
 }

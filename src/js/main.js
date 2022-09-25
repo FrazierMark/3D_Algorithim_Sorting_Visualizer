@@ -66,14 +66,14 @@ gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
 
 const dirLight1 = new THREE.DirectionalLight(0xFFA500);
 dirLight1.position.set(1, 10, 1);
-const helper = new THREE.DirectionalLightHelper(dirLight1, 5);
-scene.add(helper);
+// const helper = new THREE.DirectionalLightHelper(dirLight1, 5);
+// scene.add(helper);
 scene.add(dirLight1);
 
 const dirLight2 = new THREE.DirectionalLight(0xFFE4E4);
 dirLight2.position.set(- 1, 3, 5);
-const helper2 = new THREE.DirectionalLightHelper(dirLight2, 5);
-scene.add(helper2);
+// const helper2 = new THREE.DirectionalLightHelper(dirLight2, 5);
+// scene.add(helper2);
 scene.add(dirLight2);
 
 
@@ -252,7 +252,6 @@ function mergeSort() {
             const barTwo = group.children[barTwoIdx];
             const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
             setTimeout(() => {
-                //console.log(barOne)
                 barOne.setColor(color);
                 barTwo.setColor(color);
             }, i * ANIMATION_SPEED_MS);
@@ -278,9 +277,7 @@ function quickSort() {
             const barOne = group.children[barOneIdx];
             const barTwo = group.children[barTwoIdx];
             let roundedPivot = Math.round(pivot)
-            console.log(roundedPivot)
             const pivotPosition = group.children[roundedPivot];
-            //console.log(pivotPosition)
             const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
             setTimeout(() => {
                 barOne.setColor(color);
@@ -441,9 +438,4 @@ function newArray() {
         }
         group.add(object)
     }
-}
-
-function removeArray() {
-    while (group.children.length)
-        group.remove(group.children[0])
 }
