@@ -1,9 +1,9 @@
-export function getMergeSortAnimations(array) {
-  const animations = [];
+export function getMergeSortComparisons(array) {
+  const comparisons = [];
   if (array.length <= 1) return array;
   const auxiliaryArray = array.slice();
-  mergeSortHelper(array, 0, array.length - 1, auxiliaryArray, animations);
-  return animations;
+  mergeSortHelper(array, 0, array.length - 1, auxiliaryArray, comparisons);
+  return comparisons;
 }
 
 function mergeSortHelper(
@@ -11,13 +11,13 @@ function mergeSortHelper(
   startIdx,
   endIdx,
   auxiliaryArray,
-  animations,
+  comparisons,
 ) {
   if (startIdx === endIdx) return;
   const middleIdx = Math.floor((startIdx + endIdx) / 2);
-  mergeSortHelper(auxiliaryArray, startIdx, middleIdx, mainArray, animations);
-  mergeSortHelper(auxiliaryArray, middleIdx + 1, endIdx, mainArray, animations);
-  doMerge(mainArray, startIdx, middleIdx, endIdx, auxiliaryArray, animations);
+  mergeSortHelper(auxiliaryArray, startIdx, middleIdx, mainArray, comparisons);
+  mergeSortHelper(auxiliaryArray, middleIdx + 1, endIdx, mainArray, comparisons);
+  doMerge(mainArray, startIdx, middleIdx, endIdx, auxiliaryArray, comparisons);
 }
 
 function doMerge(
@@ -26,33 +26,33 @@ function doMerge(
   middleIdx,
   endIdx,
   auxiliaryArray,
-  animations,
+  comparisons,
 ) {
   let k = startIdx;
   let i = startIdx;
   let j = middleIdx + 1;
   while (i <= middleIdx && j <= endIdx) {
-    animations.push([i, j]);
-    animations.push([i, j]);
+    comparisons.push([i, j]);
+    comparisons.push([i, j]);
     if (auxiliaryArray[i] <= auxiliaryArray[j]) {
-      animations.push([k, auxiliaryArray[i]]);
+      comparisons.push([k, auxiliaryArray[i]]);
       mainArray[k++] = auxiliaryArray[i++];
     } else {
-      animations.push([k, auxiliaryArray[j]]);
+      comparisons.push([k, auxiliaryArray[j]]);
       mainArray[k++] = auxiliaryArray[j++];
     }
   }
 
   while (i <= middleIdx) {
-    animations.push([i, i]);
-    animations.push([i, i]);
-    animations.push([k, auxiliaryArray[i]]);
+    comparisons.push([i, i]);
+    comparisons.push([i, i]);
+    comparisons.push([k, auxiliaryArray[i]]);
     mainArray[k++] = auxiliaryArray[i++];
   }
   while (j <= endIdx) {
-    animations.push([j, j]);
-    animations.push([j, j]);
-    animations.push([k, auxiliaryArray[j]]);
+    comparisons.push([j, j]);
+    comparisons.push([j, j]);
+    comparisons.push([k, auxiliaryArray[j]]);
     mainArray[k++] = auxiliaryArray[j++];
   }
 }

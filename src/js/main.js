@@ -1,5 +1,6 @@
 import '../css/main.css';
-import { getMergeSortAnimations } from './MergeSort.js';
+import { getMergeSortComparisons } from './MergeSort.js';
+import { getQuickSortComparisons } from './QuickSort';
 import * as TWEEN from '@tweenjs/tween.js'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -9,14 +10,15 @@ import * as dat from 'lil-gui'
 const ANIMATION_SPEED_MS = 10;
 const SECONDARY_COLOR = 0xd1ec4a;
 const PRIMARY_COLOR = 0x0000FF;
-const mergeBtn = document.querySelector('.merge_position')
+const mergeSortBtn = document.querySelector('.merge_position')
 const newArrayBtn = document.querySelector('.new_array_position')
-const quickBtn = document.querySelector('.quick_position')
+const quickSortBtn = document.querySelector('.quick_position')
 const bubbleBtn = document.querySelector('.bubble_position')
 const heapBtn = document.querySelector('.heap_position')
 const removeArrayBtn = document.querySelector('.remove_position')
 
-mergeBtn.addEventListener('click', mergeSort)
+mergeSortBtn.addEventListener('click', mergeSort)
+quickSortBtn.addEventListener('click', quickSort)
 newArrayBtn.addEventListener('click', newArray)
 
 
@@ -52,16 +54,20 @@ scene.fog = new THREE.Fog(0xffe3f2fd, 10, 50);
 // scene.add(hemiLight);
 
 // Ambient light
-const ambientLight = new THREE.AmbientLight(0xffffff)
-gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
-scene.add(ambientLight)
+// const ambientLight = new THREE.AmbientLight(0x222222)
+// gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
+// scene.add(ambientLight)
 
-const dirLight1 = new THREE.DirectionalLight(0xffffff);
-dirLight1.position.set(1, 1, 1);
+const dirLight1 = new THREE.DirectionalLight(0xFFA500);
+dirLight1.position.set(1, 10, 1);
+const helper = new THREE.DirectionalLightHelper(dirLight1, 5);
+scene.add(helper);
 scene.add(dirLight1);
 
 const dirLight2 = new THREE.DirectionalLight(0x002288);
-dirLight2.position.set(- 1, - 1, - 1);
+dirLight2.position.set(- 150, 3, 10);
+const helper2 = new THREE.DirectionalLightHelper(dirLight2, 5);
+scene.add(helper2);
 scene.add(dirLight2);
 
 
@@ -86,7 +92,6 @@ scene.add(grid);
 let group = new THREE.Group();
 scene.add(group);
 group.position.z = 0;
-//group.position.x = -6
 
 const BOXES = 100;
 let stateArray = []
@@ -96,7 +101,7 @@ const localPlane = new THREE.Plane(new THREE.Vector3(10, -11, 10), 0.8);
 const globalPlane = new THREE.Plane(new THREE.Vector3(0, 10, 0), -0.0);
 
 for (let i = 0; i < BOXES; i++) {
-    const w = 0.1;
+    const w = 0.2;
     const h = randomNumFromInterval(100, 1000.0)
     stateArray.push(h)
     const geometry = new THREE.BoxGeometry(w, h, w);
@@ -118,10 +123,12 @@ for (let i = 0; i < BOXES; i++) {
         index: i + 1,
         intensity: 3
     };
-    //scene.add(object);
+    object.setColor = function (color) {
+        object.material.color.set(color);
+    }
+
     group.add(object)
 }
-
 
 
 /**
@@ -198,8 +205,7 @@ propsGlobal = {
         globalPlane.constant = v;
     }
 
-};
-
+    };
 folderGlobal.add(propsGlobal, 'Enabled');
 folderGlobal.add(propsGlobal, 'Plane', - 0.4, 3);
 
@@ -230,52 +236,91 @@ function randomNumFromInterval(min, max) {
 }
 
 function mergeSort() {
-
-    const animations = getMergeSortAnimations(stateArray);
-    for (let i = 0; i < animations.length; i++) {
+    const comparisons = getMergeSortComparisons(stateArray);
+    for (let i = 0; i < comparisons.length; i++) {
         const arrayBars = group.children
         const isColorChange = i % 3 !== 2;
         if (isColorChange) {
-            const [barOneIdx, barTwoIdx] = animations[i];
-
-            const barOne = arrayBars[barOneIdx];
-            const barTwo = arrayBars[barTwoIdx];
+            const [barOneIdx, barTwoIdx] = comparisons[i];
+            const barOne = group.children[barOneIdx];
+            const barTwo = group.children[barTwoIdx];
             const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
             setTimeout(() => {
-                barOne.material.color.setHex(color);
-                barTwo.material.color.setHex(color);
-                //console.log(barOne.material.color)
+                //console.log(barOne)
+                barOne.setColor(color);
+                barTwo.setColor(color);
             }, i * ANIMATION_SPEED_MS);
         } else {
             setTimeout(() => {
-                const [oneIdx, twoIdx] = animations[i];
-
+                const [oneIdx, twoIdx] = comparisons[i];
                 const xPosition = group.children[oneIdx].position.x
                 const userIndex = group.children[oneIdx].userData.index
                 const newHeight = twoIdx
-
                 replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex)
             }, i * ANIMATION_SPEED_MS);
         }
     }
 }
 
+function quickSort() {
+    const comparisons = getQuickSortComparisons(stateArray)
+    for (let i = 0; i < comparisons.length; i++) {
+        const arrayBars = group.children
+        const isColorChange = i % 3 !== 2;
+        if (isColorChange) {
+            const [barOneIdx, barTwoIdx] = comparisons[i];
+            const barOne = group.children[barOneIdx];
+            const barTwo = group.children[barTwoIdx];
+            const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
+            setTimeout(() => {
+                //console.log(barOne)
+                barOne.setColor(color);
+                barTwo.setColor(color);
+            }, i * ANIMATION_SPEED_MS);
+        } else {
+            setTimeout(() => {
+                const [oneIdx, twoIdx] = comparisons[i];
+
+                //update physical position
+                let tempPosition = group.children[oneIdx].position.x
+                let oneIdxPosition = group.children[oneIdx].position.x
+                let twoIdxPosition = group.children[twoIdx].position.x
+
+                moveObject(oneIdxPosition, twoIdxPosition, group.children[oneIdx])
+                moveObject(twoIdxPosition, oneIdxPosition, group.children[twoIdx])
+
+                // update position within the array 
+                swap(group.children, oneIdx, twoIdx)
+
+
+            }, i * ANIMATION_SPEED_MS);
+        }
+    }
+}
+
+
 function moveObject(oldPosition, newPosition, object) {
     const tween = new TWEEN.Tween({ x: oldPosition })
-        .to({ x: newPosition }, 10)
+        .to({ x: newPosition }, 200)
         .onUpdate((coords) => {
             object.position.x = coords.x
         });
     tween.start()
 }
 
+function swap(array, leftIndex, rightIndex) {
+    var temp = array[leftIndex];
+    array[leftIndex] = array[rightIndex];
+    array[rightIndex] = temp;
+}
+
 function replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex) {
-    const w = 0.1;
+    const w = 0.2;
     const h = newHeight
     const geometry = new THREE.BoxGeometry(w, h, w);
     const material = new THREE.MeshStandardMaterial({
         // RGB
-        color: new THREE.Color(40, 0.1, 0.1),
+        color: new THREE.Color(173, 216, 228),
         side: THREE.DoubleSide,
         // ***** Clipping setup (material): *****
         clippingPlanes: [localPlane],
@@ -289,8 +334,11 @@ function replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex) {
     object.receiveShadow = true;
     object.userData = {
         index: userIndex,
-        intensity: 3
+        intensity: 2
     };
+    object.setColor = function (color) {
+        object.material.color.set(color);
+    }
     group.children.splice(oneIdx, 1, object)
 }
 
@@ -301,13 +349,13 @@ function newArray() {
     stateArray = []
 
     for (let i = 0; i < BOXES; i++) {
-        const w = 0.1;
+        const w = 0.2;
         const h = randomNumFromInterval(100, 1000.0)
         stateArray.push(h)
         const geometry = new THREE.BoxGeometry(w, h, w);
         const material = new THREE.MeshStandardMaterial({
             // RGB
-            color: new THREE.Color(40, 0.1, 0.1),
+            color: new THREE.Color(173, 216, 228),
             flatShading: true,
             side: THREE.DoubleSide,
             // ***** Clipping setup (material): *****
