@@ -2,6 +2,7 @@ import '../css/main.css';
 import { getMergeSortComparisons } from './MergeSort.js';
 import { getQuickSortComparisons } from './QuickSort';
 import { getBubbleSortComparisons } from './BubbleSort';
+import { getHeapSortComparisons } from './HeapSort';
 import * as TWEEN from '@tweenjs/tween.js'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -331,6 +332,32 @@ function bubbleSort() {
 }
 
 function heapSort() {
+    const comparisons = getHeapSortComparisons(stateArray)
+    for (let i = 0; i < comparisons.length; i++) {
+        const arrayBars = group.children
+        const isColorChange = i % 3 !== 2;
+        if (isColorChange) {
+            const [barOneIdx, barTwoIdx] = comparisons[i];
+            const barOne = group.children[barOneIdx];
+            const barTwo = group.children[barTwoIdx];
+            const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
+            setTimeout(() => {
+                barOne.setColor(color);
+                barTwo.setColor(color);
+            }, i * ANIMATION_SPEED_MS);
+        } else {
+            setTimeout(() => {
+                const [oneIdx, twoIdx] = comparisons[i];
+                //update physical position
+                let oneIdxPosition = group.children[oneIdx].position.x
+                let twoIdxPosition = group.children[twoIdx].position.x
+                moveObject(oneIdxPosition, twoIdxPosition, group.children[oneIdx])
+                moveObject(twoIdxPosition, oneIdxPosition, group.children[twoIdx])
+                // update position within the array 
+                swap(group.children, oneIdx, twoIdx)
+            }, i * ANIMATION_SPEED_MS);
+        }
+    }
     
 }
 
