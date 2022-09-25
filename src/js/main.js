@@ -7,9 +7,10 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 
 
-const ANIMATION_SPEED_MS = 10;
-const SECONDARY_COLOR = 0xd1ec4a;
-const PRIMARY_COLOR = 0x0000FF;
+const ANIMATION_SPEED_MS = 100;
+const SECONDARY_COLOR = 0x005A5E;
+const PRIMARY_COLOR = 0xCC4B55;
+const PIVOT_COLOR = 0xFFFF00;
 const mergeSortBtn = document.querySelector('.merge_position')
 const newArrayBtn = document.querySelector('.new_array_position')
 const quickSortBtn = document.querySelector('.quick_position')
@@ -54,8 +55,8 @@ scene.fog = new THREE.Fog(0xffe3f2fd, 10, 50);
 // scene.add(hemiLight);
 
 // Ambient light
-// const ambientLight = new THREE.AmbientLight(0x222222)
-// gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
+const ambientLight = new THREE.AmbientLight(0x222222)
+gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
 // scene.add(ambientLight)
 
 const dirLight1 = new THREE.DirectionalLight(0xFFA500);
@@ -64,8 +65,8 @@ const helper = new THREE.DirectionalLightHelper(dirLight1, 5);
 scene.add(helper);
 scene.add(dirLight1);
 
-const dirLight2 = new THREE.DirectionalLight(0x002288);
-dirLight2.position.set(- 150, 3, 10);
+const dirLight2 = new THREE.DirectionalLight(0xFFE4E4);
+dirLight2.position.set(- 1, 3, 5);
 const helper2 = new THREE.DirectionalLightHelper(dirLight2, 5);
 scene.add(helper2);
 scene.add(dirLight2);
@@ -107,7 +108,7 @@ for (let i = 0; i < BOXES; i++) {
     const geometry = new THREE.BoxGeometry(w, h, w);
     const material = new THREE.MeshStandardMaterial({
         // RGB
-        color: new THREE.Color(173, 216, 228),
+        color: new THREE.Color(0, 4, 1),
 
         side: THREE.DoubleSide,
         // ***** Clipping setup (material): *****
@@ -268,21 +269,24 @@ function quickSort() {
         const arrayBars = group.children
         const isColorChange = i % 3 !== 2;
         if (isColorChange) {
-            const [barOneIdx, barTwoIdx] = comparisons[i];
+            const [barOneIdx, barTwoIdx, pivot] = comparisons[i];
             const barOne = group.children[barOneIdx];
             const barTwo = group.children[barTwoIdx];
+            let roundedPivot = Math.round(pivot)
+            console.log(roundedPivot)
+            const pivotPosition = group.children[roundedPivot];
+            //console.log(pivotPosition)
             const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
             setTimeout(() => {
-                //console.log(barOne)
                 barOne.setColor(color);
                 barTwo.setColor(color);
+                pivotPosition.setColor(PIVOT_COLOR)
             }, i * ANIMATION_SPEED_MS);
         } else {
             setTimeout(() => {
-                const [oneIdx, twoIdx] = comparisons[i];
+                const [oneIdx, twoIdx, pivot] = comparisons[i];
 
                 //update physical position
-                let tempPosition = group.children[oneIdx].position.x
                 let oneIdxPosition = group.children[oneIdx].position.x
                 let twoIdxPosition = group.children[twoIdx].position.x
 
@@ -301,7 +305,7 @@ function quickSort() {
 
 function moveObject(oldPosition, newPosition, object) {
     const tween = new TWEEN.Tween({ x: oldPosition })
-        .to({ x: newPosition }, 200)
+        .to({ x: newPosition }, ANIMATION_SPEED_MS)
         .onUpdate((coords) => {
             object.position.x = coords.x
         });
@@ -320,7 +324,7 @@ function replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex) {
     const geometry = new THREE.BoxGeometry(w, h, w);
     const material = new THREE.MeshStandardMaterial({
         // RGB
-        color: new THREE.Color(173, 216, 228),
+        color: new THREE.Color(0, 4, 1),
         side: THREE.DoubleSide,
         // ***** Clipping setup (material): *****
         clippingPlanes: [localPlane],
@@ -355,7 +359,7 @@ function newArray() {
         const geometry = new THREE.BoxGeometry(w, h, w);
         const material = new THREE.MeshStandardMaterial({
             // RGB
-            color: new THREE.Color(173, 216, 228),
+            color: new THREE.Color(0, 4, 1),
             flatShading: true,
             side: THREE.DoubleSide,
             // ***** Clipping setup (material): *****
@@ -371,7 +375,10 @@ function newArray() {
             index: i + 1,
             intensity: 3
         };
-        //scene.add(object);
+
+        object.setColor = function (color) {
+            object.material.color.set(color);
+        }
         group.add(object)
     }
 }

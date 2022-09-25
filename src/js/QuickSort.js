@@ -22,6 +22,7 @@ function partition(array, left, right, comparisons) {
     var pivot = array[Math.floor((right + left) / 2)], //middle element
         i = left, //left pointer
         j = right; //right pointer
+
     while (i <= j) {
         while (array[i] < pivot) {
             i++;
@@ -30,9 +31,9 @@ function partition(array, left, right, comparisons) {
             j--;
         }
         if (i <= j) {
-            comparisons.push([i, j])
-            comparisons.push([i, j])
-            comparisons.push([i, j])
+            comparisons.push([i, j, pivot])
+            comparisons.push([i, j, pivot])
+            comparisons.push([i, j, pivot])
             swap(array, i, j); //sawpping two elements
             i++;
             j--;
