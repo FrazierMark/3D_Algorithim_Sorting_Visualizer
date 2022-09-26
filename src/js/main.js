@@ -10,9 +10,9 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 
 
-const ANIMATION_SPEED_MS = 10;
+let ANIMATION_SPEED_MS = 100;
 const SECONDARY_COLOR = 0x005A5E;
-const PRIMARY_COLOR = 0xCC4B55;
+const PRIMARY_COLOR = 0x4FFFFF;
 const PIVOT_COLOR = 0xFFFF00;
 const mergeSortBtn = document.querySelector('.merge_position')
 const newArrayBtn = document.querySelector('.new_array_position')
@@ -20,7 +20,7 @@ const quickSortBtn = document.querySelector('.quick_position')
 const bubbleSortBtn = document.querySelector('.bubble_position')
 const heapSortBtn = document.querySelector('.heap_position')
 const selectionSortBtn = document.querySelector('.selection_position')
-const removeArrayBtn = document.querySelector('.remove_position')
+const slider = document.querySelector('.slider');
 
 mergeSortBtn.addEventListener('click', mergeSort)
 quickSortBtn.addEventListener('click', quickSort)
@@ -28,7 +28,11 @@ bubbleSortBtn.addEventListener('click', bubbleSort)
 heapSortBtn.addEventListener('click', heapSort)
 selectionSortBtn.addEventListener('click', selectionSort)
 newArrayBtn.addEventListener('click', newArray)
+slider.addEventListener('input', sliderChange);
 
+function sliderChange() {
+    ANIMATION_SPEED_MS = this.value;
+}
 
 
 // Setup the animation loop.
@@ -43,7 +47,7 @@ requestAnimationFrame(animate)
  * Base
  */
 // Debug
-const gui = new dat.GUI()
+// const gui = new dat.GUI()
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -64,7 +68,7 @@ scene.fog = new THREE.Fog(0xffe3f2fd, 10, 50);
 
 // Ambient light
 const ambientLight = new THREE.AmbientLight(0x222222)
-gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
+//gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
 // scene.add(ambientLight)
 
 const dirLight1 = new THREE.DirectionalLight(0xFFA500);
@@ -171,7 +175,6 @@ const camera = new THREE.PerspectiveCamera(60, sizes.width / sizes.height, 0.1, 
 camera.position.x = 0
 camera.position.y = 2
 camera.position.z = 10
-///camera.lookAt(group);
 scene.add(camera)
 
 // Controls
@@ -197,26 +200,26 @@ const globalPlanes = [globalPlane],
 renderer.clippingPlanes = globalPlanes; // GUI sets it to globalPlanes
 renderer.localClippingEnabled = true;
 
-let folderGlobal = gui.addFolder('Global Clipping'),
-propsGlobal = {
+// let folderGlobal = gui.addFolder('Global Clipping'),
+// propsGlobal = {
 
-    get 'Enabled'() {
-        return renderer.clippingPlanes !== Empty;
-    },
-    set 'Enabled'(v) {
-        renderer.clippingPlanes = v ? globalPlanes : Empty;
-    },
+//     get 'Enabled'() {
+//         return renderer.clippingPlanes !== Empty;
+//     },
+//     set 'Enabled'(v) {
+//         renderer.clippingPlanes = v ? globalPlanes : Empty;
+//     },
 
-    get 'Plane'() {
-        return globalPlane.constant;
-    },
-    set 'Plane'(v) {
-        globalPlane.constant = v;
-    }
+//     get 'Plane'() {
+//         return globalPlane.constant;
+//     },
+//     set 'Plane'(v) {
+//         globalPlane.constant = v;
+//     }
 
-    };
-folderGlobal.add(propsGlobal, 'Enabled');
-folderGlobal.add(propsGlobal, 'Plane', - 0.4, 3);
+//     };
+// folderGlobal.add(propsGlobal, 'Enabled');
+// folderGlobal.add(propsGlobal, 'Plane', - 0.4, 3);
 
 
 /**
