@@ -11,8 +11,8 @@
 source - https://177studio.com/
 non-comercial, personal use */
 @font-face {
-  font-family: "abnes";
-  src: url("../../public/fonts/abnes.ttf");
+  font-family: "misto";
+  src: url("../../public/fonts/misto.ttf");
 }
 
 body {
@@ -42,9 +42,9 @@ body {
 .titles {
   grid-row: 1;
   grid-column: 2;
-  font-family: "abnes";
+  font-family: "misto";
   letter-spacing: 0.1px;
-  margin-bottom: 13em;
+  margin-bottom: 12em;
   font-size: 40px;
 }
 
@@ -79,7 +79,7 @@ body {
 .sort_button {
   margin: 10px;
   margin-bottom: 50px;
-  font-family: "abnes";
+  font-family: "misto";
   padding: 10px;
   border-radius: 5%;
   color: #f2f8f4;
@@ -98,7 +98,7 @@ body {
 }
 
 .sorted {
-  font-family: "abnes";
+  font-family: "misto";
   font-size: 50px;
   letter-spacing: 10px;
   display: flex;
@@ -132,7 +132,7 @@ body {
     letter-spacing: 5px;
     margin-top: 40px;
     font-size: 15px;
-    font-family: "abnes";
+    font-family: "misto";
     padding: 5px;
   }
 }
