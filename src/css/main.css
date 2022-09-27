@@ -7,9 +7,6 @@
   background: linear-gradient(35deg, #d1ec4a, #f986ff);
 }
 
-/* font credit - 117studio - Type Foundry and Graphic Design Studio
-source - https://177studio.com/
-non-comercial, personal use */
 @font-face {
   font-family: "misto";
   src: url("../../public/fonts/misto.ttf");
@@ -18,8 +15,8 @@ non-comercial, personal use */
 body {
   z-index: 1;
   display: grid;
-  height: 97vh;
-  width: 97vw;
+  height: 99vh;
+  width: 99vw;
   flex-direction: column;
   justify-content: center;
   align-content: center;
@@ -38,6 +35,29 @@ body {
     opacity: 1;
   }
 }
+.speed_settings {
+  grid-row: 4;
+  grid-column: 2;
+  text-align: center;
+  align-items: flex-start;
+}
+.amount_settings{
+  grid-row: 4;
+  grid-column: 5;
+  text-align: center;
+  align-items: flex-start;
+}
+
+.slider{
+  font-family: "misto";
+  font-size: 20px;
+  letter-spacing: 3px;
+  display: flex;
+  flex-wrap: wrap;
+  color: white;
+  border-radius: 2%;
+  text-align: center;
+}
 
 .titles {
   grid-row: 1;
@@ -51,7 +71,7 @@ body {
 .button_container {
   z-index: 1;
   display: grid;
-  grid-row: 3;
+  grid-row: 2;
   grid-column: 2;
   align-items: stretch;
   justify-content: center;
@@ -125,14 +145,19 @@ body {
   }
 
   .titles {
-    margin-bottom: 35px;
+    margin-bottom: 15px;
     font-size: 25px;
   }
   .sort_button {
-    letter-spacing: 5px;
+    letter-spacing: 2px;
     margin-top: 40px;
-    font-size: 15px;
+    font-size: 10px;
     font-family: "misto";
     padding: 5px;
+  }
+  .slider{
+    letter-spacing: 2px;
+    font-size: 10px;
+    font-family: "misto";
   }
 }
