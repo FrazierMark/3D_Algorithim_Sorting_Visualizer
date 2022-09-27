@@ -11,6 +11,7 @@ import * as dat from 'lil-gui'
 
 
 let ANIMATION_SPEED_MS = 100;
+let BOXES = 100;
 const SECONDARY_COLOR = 0x005A5E;
 const PRIMARY_COLOR = 0x4FFFFF;
 const PIVOT_COLOR = 0xFFFF00;
@@ -20,7 +21,8 @@ const quickSortBtn = document.querySelector('.quick_position')
 const bubbleSortBtn = document.querySelector('.bubble_position')
 const heapSortBtn = document.querySelector('.heap_position')
 const selectionSortBtn = document.querySelector('.selection_position')
-const slider = document.querySelector('.slider');
+const speedSlider = document.querySelector('.speed_slider');
+const amountSlider = document.querySelector('.amount_slider')
 
 mergeSortBtn.addEventListener('click', mergeSort)
 quickSortBtn.addEventListener('click', quickSort)
@@ -28,10 +30,15 @@ bubbleSortBtn.addEventListener('click', bubbleSort)
 heapSortBtn.addEventListener('click', heapSort)
 selectionSortBtn.addEventListener('click', selectionSort)
 newArrayBtn.addEventListener('click', newArray)
-slider.addEventListener('input', sliderChange);
+speedSlider.addEventListener('input', speedSliderChange);
+amountSlider.addEventListener('input', amountSliderChange)
 
-function sliderChange() {
+function speedSliderChange() {
     ANIMATION_SPEED_MS = this.value;
+}
+
+function amountSliderChange() {
+    BOXES = this.value
 }
 
 
@@ -47,7 +54,7 @@ requestAnimationFrame(animate)
  * Base
  */
 // Debug
-// const gui = new dat.GUI()
+const gui = new dat.GUI()
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -106,11 +113,11 @@ let group = new THREE.Group();
 scene.add(group);
 group.position.z = 0;
 
-const BOXES = 100;
+
 let stateArray = []
 
 // ***** Clipping planes: *****
-const localPlane = new THREE.Plane(new THREE.Vector3(10, -11, 10), 0.8);
+//const localPlane = new THREE.Plane(new THREE.Vector3(10, -11, 10), 0.8);
 const globalPlane = new THREE.Plane(new THREE.Vector3(0, 10, 0), -0.0);
 
 for (let i = 0; i < BOXES; i++) {
@@ -124,12 +131,13 @@ for (let i = 0; i < BOXES; i++) {
 
         side: THREE.DoubleSide,
         // ***** Clipping setup (material): *****
-        clippingPlanes: [localPlane],
+        //clippingPlanes: [GlobalPlane],
         clipShadows: true
     });
 
     const object = new THREE.Mesh(geometry, material);
-    object.position.x = (i - 50) * (w + 0.06);
+    //let setArrayStart = Math.floor(Boxes)
+    object.position.x = (i - (Math.floor(BOXES / 2))) * (w + 0.06);
     object.castShadow = true;
     object.receiveShadow = true;
     object.userData = {
@@ -171,7 +179,7 @@ window.addEventListener('resize', () => {
  * Camera
  */
 // Base camera
-const camera = new THREE.PerspectiveCamera(60, sizes.width / sizes.height, 0.1, 100)
+const camera = new THREE.PerspectiveCamera(60, sizes.width / sizes.height, 0.1, 2000)
 camera.position.x = 0
 camera.position.y = 2
 camera.position.z = 10
@@ -200,26 +208,26 @@ const globalPlanes = [globalPlane],
 renderer.clippingPlanes = globalPlanes; // GUI sets it to globalPlanes
 renderer.localClippingEnabled = true;
 
-// let folderGlobal = gui.addFolder('Global Clipping'),
-// propsGlobal = {
+let folderGlobal = gui.addFolder('Global Clipping'),
+    propsGlobal = {
 
-//     get 'Enabled'() {
-//         return renderer.clippingPlanes !== Empty;
-//     },
-//     set 'Enabled'(v) {
-//         renderer.clippingPlanes = v ? globalPlanes : Empty;
-//     },
+        get 'Enabled'() {
+            return renderer.clippingPlanes !== Empty;
+        },
+        set 'Enabled'(v) {
+            renderer.clippingPlanes = v ? globalPlanes : Empty;
+        },
 
-//     get 'Plane'() {
-//         return globalPlane.constant;
-//     },
-//     set 'Plane'(v) {
-//         globalPlane.constant = v;
-//     }
+        get 'Plane'() {
+            return globalPlane.constant;
+        },
+        set 'Plane'(v) {
+            globalPlane.constant = v;
+        }
 
-//     };
-// folderGlobal.add(propsGlobal, 'Enabled');
-// folderGlobal.add(propsGlobal, 'Plane', - 0.4, 3);
+    };
+folderGlobal.add(propsGlobal, 'Enabled');
+folderGlobal.add(propsGlobal, 'Plane', - 0.4, 3);
 
 
 /**
@@ -418,7 +426,7 @@ function replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex) {
         color: new THREE.Color(0, 4, 1),
         side: THREE.DoubleSide,
         // ***** Clipping setup (material): *****
-        clippingPlanes: [localPlane],
+        clippingPlanes: [globalPlane],
         clipShadows: true
     });
 
@@ -454,12 +462,12 @@ function newArray() {
             flatShading: true,
             side: THREE.DoubleSide,
             // ***** Clipping setup (material): *****
-            clippingPlanes: [localPlane],
+            clippingPlanes: [globalPlane],
             clipShadows: true
         });
 
         const object = new THREE.Mesh(geometry, material);
-        object.position.x = (i - 50) * (w + 0.06);
+        object.position.x = (i - (BOXES / 2)) * (w + 0.06);
         object.castShadow = true;
         object.receiveShadow = true;
         object.userData = {
