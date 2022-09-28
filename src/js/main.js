@@ -8,6 +8,8 @@ import * as TWEEN from '@tweenjs/tween.js'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
+import fragmentShader from '../../public/shaders/fragmentShader.glsl'
+import vertexShader from '../../public/shaders/vertexShader.glsl'
 
 
 let ANIMATION_SPEED_MS = 100;
@@ -135,7 +137,24 @@ for (let i = 0; i < BOXES; i++) {
         clipShadows: true
     });
 
-    const object = new THREE.Mesh(geometry, material);
+    const shaderMaterial = new THREE.ShaderMaterial({
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader,
+        uniforms: {
+            uColor: { value: new THREE.Color(0x51b1f5) },
+            uLightPos: {
+                value: new THREE.Vector3(0, 5, 3) // position of spotlight
+              },
+              uLightColor: {
+                value: new THREE.Color(0xffffff) // default light color
+              },
+              uLightIntensity: {
+                value: 0.7 // light intensity
+              },
+        }
+    });
+
+    const object = new THREE.Mesh(geometry, shaderMaterial);
     //let setArrayStart = Math.floor(Boxes)
     object.position.x = (i - (Math.floor(BOXES / 2))) * (w + 0.06);
     object.castShadow = true;
