@@ -87,15 +87,14 @@ module.exports = {
                 }
             },
 
-            // Shaders
-            {
-                test: /\.(glsl|vs|fs|vert|frag)$/,
-                type: 'asset/source',
-                generator:
+                // Shaders
                 {
-                    filename: 'assets/images/[hash][ext]'
+                    test: /\.(glsl|vs|fs|frag|vert)$/,
+                    use: [
+                        require.resolve('raw-loader'),
+                        require.resolve('glslify-loader'),
+                    ]
                 }
-            }
         ]
     }
 }
