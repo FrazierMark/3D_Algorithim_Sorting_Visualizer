@@ -8,6 +8,7 @@ import * as TWEEN from '@tweenjs/tween.js'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
+import glslify from "glslify"
 import fragmentShader from '../../public/shaders/fragmentShader.glsl'
 import vertexShader from '../../public/shaders/vertexShader.glsl'
 
