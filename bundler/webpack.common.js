@@ -85,16 +85,17 @@ module.exports = {
                 {
                     filename: 'assets/audio/[hash][ext]'
                 }
-                },
-             // Shaders
+            },
+
+            // Shaders
+            {
+                test: /\.(glsl|vs|fs|vert|frag)$/,
+                type: 'asset/source',
+                generator:
                 {
-                    test: /\.(glsl|vs|fs|vert|frag)$/,
-                    exclude: /node_modules/,
-                    use: ['raw-loader', 'glslify-loader'],
-                },
-            ]
-    },
-    resolve: {
-        extensions: ['.ts', '.js'],
-    },
+                    filename: 'assets/images/[hash][ext]'
+                }
+            }
+        ]
+    }
 }

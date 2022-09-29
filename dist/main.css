@@ -1,0 +1,168 @@
+.webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  outline: none;
+  height: 100%;
+  width: 100%;
+  z-index: -1;
+  background: linear-gradient(35deg, #d1ec4a, #f986ff);
+}
+
+@font-face {
+  font-family: "misto";
+  src: url(assets/fonts/ee3e1af1177951ac.ttf) format('truetype')
+}
+
+body {
+  z-index: 1;
+  display: grid;
+  height: 98vh;
+  width: 98vw;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: flex-start;
+  justify-items: center;
+  animation: fadeInAnimation ease 3s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeInAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.speed_settings {
+  grid-row: 4;
+  grid-column: 2;
+  text-align: center;
+  align-items: flex-start;
+}
+.amount_settings{
+  grid-row: 4;
+  grid-column: 5;
+  text-align: center;
+  align-items: flex-start;
+}
+
+.slider{
+  font-family: "misto";
+  font-size: 20px;
+  letter-spacing: 3px;
+  display: flex;
+  flex-wrap: wrap;
+  color: white;
+  border-radius: 2%;
+  text-align: center;
+}
+
+.titles {
+  grid-row: 1;
+  grid-column: 2;
+  font-family: "misto";
+  letter-spacing: 0.1px;
+  margin-bottom: 12em;
+  font-size: 40px;
+}
+
+.button_container {
+  z-index: 1;
+  display: grid;
+  grid-row: 2;
+  grid-column: 2;
+  align-items: stretch;
+  justify-content: center;
+  margin-top: 14em;
+}
+
+.merge_position {
+  grid-row: 1;
+  grid-column: 1;
+}
+
+.quick_position {grid-row: 1;
+  grid-column: 2;}
+
+.bubble_position {grid-row: 1;
+  grid-column: 3;}
+
+.heap_position {grid-row: 1;
+  grid-column: 4;}
+
+.new_array_position {grid-row: 1;
+  margin: 20px;
+  grid-column: 7;}
+
+.sort_button {
+  margin: 10px;
+  margin-bottom: 50px;
+  font-family: "misto";
+  padding: 10px;
+  border-radius: 5%;
+  color: #f2f8f4;
+  letter-spacing: 5px;
+  font-size: 14px;
+  overflow: hidden;
+  transition: 0.2s;
+  background: linear-gradient(360deg, transparent, #ea11a1);
+  box-shadow: 1px 1px rgb(0, 217, 255), 1px 0 0.4em rgb(255, 85, 0);
+}
+
+.neonText {
+  color: #fff;
+  text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #0fa,
+    0 0 82px rgb(255, 0, 217), 0 0 92px rgb(255, 0 , 217), 0 0 102px rgb(255, 0 , 217), 0 0 151px #0fa;
+}
+
+.sorted {
+  font-family: "misto";
+  font-size: 50px;
+  letter-spacing: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  color: white;
+  position: absolute;
+  border-radius: 2%;
+  text-align: center;
+  left: 50%px;
+  top: 40%;
+  background: linear-gradient(360deg, transparent, #67ccae);
+  box-shadow: 1px 1px rgb(0, 217, 255), 1px 0 0.4em #0fa;
+}
+
+
+.sortedMessageDisable {
+  display: none;
+}
+
+@media only screen and (min-width: 375px) and (max-width: 832px) {
+  .cell {
+    height: 40px;
+    width: 40px;
+  }
+
+  .titles {
+    margin-bottom: 15px;
+    font-size: 25px;
+  }
+  .sort_button {
+    letter-spacing: 2px;
+    margin-top: 40px;
+    font-size: 10px;
+    font-family: "misto";
+    padding: 5px;
+  }
+  .slider{
+    letter-spacing: 2px;
+    font-size: 10px;
+    font-family: "misto";
+  }
+}
+
+
+/*# sourceMappingURL=main.css.map*/
