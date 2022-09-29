@@ -10,8 +10,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 //import * as dat from 'lil-gui'
 
 
-let ANIMATION_SPEED_MS = 100;
-let BOXES = 100;
+let speed = 100;
+let bars = 100;
 const SECONDARY_COLOR = 0x005A5E;
 const PRIMARY_COLOR = 0x4FFFFF;
 const PIVOT_COLOR = 0xFFFF00;
@@ -34,11 +34,11 @@ speedSlider.addEventListener('input', speedSliderChange);
 amountSlider.addEventListener('input', amountSliderChange)
 
 function speedSliderChange() {
-    ANIMATION_SPEED_MS = this.value;
+    speed = this.value;
 }
 
 function amountSliderChange() {
-    BOXES = this.value
+    bars = this.value
 }
 
 // Setup the animation loop.
@@ -95,7 +95,7 @@ let stateArray = []
 //const localPlane = new THREE.Plane(new THREE.Vector3(10, -11, 10), 0.8);
 const globalPlane = new THREE.Plane(new THREE.Vector3(0, 10, 0), -0.0);
 
-for (let i = 0; i < BOXES; i++) {
+for (let i = 0; i < bars; i++) {
     const w = 0.2;
     const h = randomNumFromInterval(100, 1000.0)
     stateArray.push(h)
@@ -111,7 +111,7 @@ for (let i = 0; i < BOXES; i++) {
     });
 
     const object = new THREE.Mesh(geometry, material);
-    object.position.x = (i - (Math.floor(BOXES / 2))) * (w + 0.06);
+    object.position.x = (i - (Math.floor(bars / 2))) * (w + 0.06);
     object.castShadow = true;
     object.receiveShadow = true;
     object.userData = {
@@ -218,7 +218,7 @@ function mergeSort() {
             setTimeout(() => {
                 barOne.setColor(color);
                 barTwo.setColor(color);
-            }, i * ANIMATION_SPEED_MS);
+            }, i * speed);
         } else {
             setTimeout(() => {
                 const [oneIdx, twoIdx] = comparisons[i];
@@ -226,7 +226,7 @@ function mergeSort() {
                 const userIndex = group.children[oneIdx].userData.index
                 const newHeight = twoIdx
                 replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex)
-            }, i * ANIMATION_SPEED_MS);
+            }, i * speed);
         }
     }
 }
@@ -246,7 +246,7 @@ function quickSort() {
                 barOne.setColor(color);
                 barTwo.setColor(color);
                 pivotPosition.setColor(PIVOT_COLOR)
-            }, i * ANIMATION_SPEED_MS);
+            }, i * speed);
         } else {
             setTimeout(() => {
                 const [oneIdx, twoIdx, pivot] = comparisons[i];
@@ -257,7 +257,7 @@ function quickSort() {
                 moveObject(twoIdxPosition, oneIdxPosition, group.children[twoIdx])
                 // update position within the array 
                 swap(group.children, oneIdx, twoIdx)
-            }, i * ANIMATION_SPEED_MS);
+            }, i * speed);
         }
     }
 }
@@ -274,7 +274,7 @@ function bubbleSort() {
             setTimeout(() => {
                 barOne.setColor(color);
                 barTwo.setColor(color);
-            }, i * ANIMATION_SPEED_MS);
+            }, i * speed);
         } else {
             setTimeout(() => {
                 const [oneIdx, twoIdx] = comparisons[i];
@@ -285,7 +285,7 @@ function bubbleSort() {
                 moveObject(twoIdxPosition, oneIdxPosition, group.children[twoIdx])
                 // update position within the array 
                 swap(group.children, oneIdx, twoIdx)
-            }, i * ANIMATION_SPEED_MS);
+            }, i * speed);
         }
     }
 }
@@ -302,7 +302,7 @@ function heapSort() {
             setTimeout(() => {
                 barOne.setColor(color);
                 barTwo.setColor(color);
-            }, i * ANIMATION_SPEED_MS);
+            }, i * speed);
         } else {
             setTimeout(() => {
                 const [oneIdx, twoIdx] = comparisons[i];
@@ -313,7 +313,7 @@ function heapSort() {
                 moveObject(twoIdxPosition, oneIdxPosition, group.children[twoIdx])
                 // update position within the array 
                 swap(group.children, oneIdx, twoIdx)
-            }, i * ANIMATION_SPEED_MS);
+            }, i * speed);
         }
     }
 }
@@ -330,7 +330,7 @@ function selectionSort() {
             setTimeout(() => {
                 barOne.setColor(color);
                 barTwo.setColor(color);
-            }, i * ANIMATION_SPEED_MS);
+            }, i * speed);
         } else {
             setTimeout(() => {
                 const [oneIdx, twoIdx] = comparisons[i];
@@ -341,7 +341,7 @@ function selectionSort() {
                 moveObject(twoIdxPosition, oneIdxPosition, group.children[twoIdx])
                 // update position within the array 
                 swap(group.children, oneIdx, twoIdx)
-            }, i * ANIMATION_SPEED_MS);
+            }, i * speed);
         }
     }
 }
@@ -349,7 +349,7 @@ function selectionSort() {
 
 function moveObject(oldPosition, newPosition, object) {
     const tween = new TWEEN.Tween({ x: oldPosition })
-        .to({ x: newPosition }, ANIMATION_SPEED_MS)
+        .to({ x: newPosition }, speed)
         .onUpdate((coords) => {
             object.position.x = coords.x
         });
@@ -396,7 +396,7 @@ function newArray() {
         group.remove(group.children[0])
     stateArray = []
 
-    for (let i = 0; i < BOXES; i++) {
+    for (let i = 0; i < bars; i++) {
         const w = 0.2;
         const h = randomNumFromInterval(100, 1000.0)
         stateArray.push(h)
@@ -412,7 +412,7 @@ function newArray() {
         });
 
         const object = new THREE.Mesh(geometry, material);
-        object.position.x = (i - (BOXES / 2)) * (w + 0.06);
+        object.position.x = (i - (bars / 2)) * (w + 0.06);
         object.castShadow = true;
         object.receiveShadow = true;
         object.userData = {
