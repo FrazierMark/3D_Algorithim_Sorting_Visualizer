@@ -3,6 +3,8 @@
   top: 0;
   left: 0;
   outline: none;
+  height: 100%;
+  width: 100%;
   z-index: -1;
   background: linear-gradient(35deg, #d1ec4a, #f986ff);
 }
