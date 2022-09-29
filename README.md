@@ -23,7 +23,7 @@
 * NPM
 
 ## Live Link & Getting Started
-* https://fraziermark.github.io/GA_SEIR_Project1/
+* 
 
  
 #### To run locally, clone the repository and open the project in your editor
