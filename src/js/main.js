@@ -7,7 +7,7 @@ import { getSelectionSortComparisons } from './SelectionSort';
 import * as TWEEN from '@tweenjs/tween.js'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import * as dat from 'lil-gui'
+//import * as dat from 'lil-gui'
 
 
 let ANIMATION_SPEED_MS = 100;
@@ -41,7 +41,6 @@ function amountSliderChange() {
     BOXES = this.value
 }
 
-
 // Setup the animation loop.
 function animate(time) {
 	requestAnimationFrame(animate)
@@ -54,7 +53,7 @@ requestAnimationFrame(animate)
  * Base
  */
 // Debug
-const gui = new dat.GUI()
+//const gui = new dat.GUI()
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -81,7 +80,6 @@ const grid = new THREE.GridHelper(500, 500, 0x000000, 0x000000);
 grid.material.opacity = 0.2;
 grid.material.transparent = true;
 scene.add(grid);
-
 
 /**
  * Objects
@@ -123,7 +121,6 @@ for (let i = 0; i < BOXES; i++) {
     object.setColor = function (color) {
         object.material.color.set(color);
     }
-
     group.add(object)
 }
 
@@ -150,7 +147,6 @@ window.addEventListener('resize', () => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
-
 /**
  * Camera
  */
@@ -158,7 +154,7 @@ window.addEventListener('resize', () => {
 const camera = new THREE.PerspectiveCamera(60, sizes.width / sizes.height, 0.1, 2000)
 camera.position.x = 0
 camera.position.y = 2
-camera.position.z = 10
+camera.position.z = 14
 scene.add(camera)
 
 // Controls
@@ -349,7 +345,6 @@ function selectionSort() {
         }
     }
 }
-
 
 
 function moveObject(oldPosition, newPosition, object) {
