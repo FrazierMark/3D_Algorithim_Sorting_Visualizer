@@ -9,7 +9,7 @@
 
 @font-face {
   font-family: "misto";
-  src: url("/public/fonts/misto.ttf") format('truetype')
+  src: url("../static/misto.ttf") format('truetype')
 }
 
 body {
