@@ -22,7 +22,7 @@
 * NodeJS
 * NPM
 
-## Getting Started & Live Game Link
+## Live Link & Getting Started
 * https://fraziermark.github.io/GA_SEIR_Project1/
 
  

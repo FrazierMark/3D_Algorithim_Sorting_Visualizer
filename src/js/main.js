@@ -52,9 +52,6 @@ function animate(time) {
 requestAnimationFrame(animate)
 
 
-/**
- * Base
- */
 // Debug
 //const gui = new dat.GUI()
 
@@ -87,7 +84,6 @@ scene.add(grid);
 /**
  * Objects
  */
-
 let group = new THREE.Group();
 scene.add(group);
 group.position.z = 0;
@@ -95,7 +91,6 @@ group.position.z = 0;
 let stateArray = []
 
 // ***** Clipping planes: *****
-//const localPlane = new THREE.Plane(new THREE.Vector3(10, -11, 10), 0.8);
 const globalPlane = new THREE.Plane(new THREE.Vector3(0, 10, 0), -0.0);
 
 for (let i = 0; i < bars; i++) {
@@ -193,10 +188,8 @@ const tick = () => {
     const elapsedTime = clock.getElapsedTime()
     // Update controls
     controls.update()
-
     // Render
     renderer.render(scene, camera)
-
     // Call tick again on the next frame
     window.requestAnimationFrame(tick)
 }
@@ -312,6 +305,7 @@ function doComparisonsAndSort(comparisons) {
     }
 }
 
+// Move the 3D object in x,y,z space to physical location based on sort
 function moveObject(oldPosition, newPosition, object) {
     const tween = new TWEEN.Tween({ x: oldPosition })
         .to({ x: newPosition }, speed)
@@ -321,6 +315,7 @@ function moveObject(oldPosition, newPosition, object) {
     tween.start()
 }
 
+// Swap the elements within the main array
 function swap(array, leftIndex, rightIndex) {
     var temp = array[leftIndex];
     array[leftIndex] = array[rightIndex];
@@ -338,7 +333,6 @@ function replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex) {
         clippingPlanes: [globalPlane],
         clipShadows: true
     });
-
     const object = new THREE.Mesh(geometry, material);
     object.position.x = xPosition;
     object.position.z = .5
@@ -387,6 +381,7 @@ function newArray() {
         object.setColor = function (color) {
             object.material.color.set(color);
         }
+
         group.add(object)
     }
 }
