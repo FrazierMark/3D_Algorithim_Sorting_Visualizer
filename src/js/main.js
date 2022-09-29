@@ -267,90 +267,25 @@ function quickSort() {
 
 function bubbleSort() {
     const comparisons = getBubbleSortComparisons(stateArray)
-    for (let i = 0; i < comparisons.length; i++) {
-        const isColorChange = i % 3 !== 2;
-        if (isColorChange) {
-            const [barOneIdx, barTwoIdx] = comparisons[i];
-            const barOne = group.children[barOneIdx];
-            const barTwo = group.children[barTwoIdx];
-            const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
-            setTimeout(() => {
-                barOne.setColor(color);
-                barTwo.setColor(color);
-            }, i * speed);
-        } else {
-            setTimeout(() => {
-                const [oneIdx, twoIdx] = comparisons[i];
-                //update physical position
-                let oneIdxPosition = group.children[oneIdx].position.x
-                let twoIdxPosition = group.children[twoIdx].position.x
-                moveObject(oneIdxPosition, twoIdxPosition, group.children[oneIdx])
-                moveObject(twoIdxPosition, oneIdxPosition, group.children[twoIdx])
-                // update position within the array 
-                swap(group.children, oneIdx, twoIdx)
-            }, i * speed);
-        }
-    }
+    doComparisonsAndSort(comparisons)
 }
 
 function heapSort() {
     const comparisons = getHeapSortComparisons(stateArray)
-    for (let i = 0; i < comparisons.length; i++) {
-        const isColorChange = i % 3 !== 2;
-        if (isColorChange) {
-            const [barOneIdx, barTwoIdx] = comparisons[i];
-            const barOne = group.children[barOneIdx];
-            const barTwo = group.children[barTwoIdx];
-            const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
-            setTimeout(() => {
-                barOne.setColor(color);
-                barTwo.setColor(color);
-            }, i * speed);
-        } else {
-            setTimeout(() => {
-                const [oneIdx, twoIdx] = comparisons[i];
-                //update physical position
-                let oneIdxPosition = group.children[oneIdx].position.x
-                let twoIdxPosition = group.children[twoIdx].position.x
-                moveObject(oneIdxPosition, twoIdxPosition, group.children[oneIdx])
-                moveObject(twoIdxPosition, oneIdxPosition, group.children[twoIdx])
-                // update position within the array 
-                swap(group.children, oneIdx, twoIdx)
-            }, i * speed);
-        }
-    }
+    doComparisonsAndSort(comparisons)
 }
 
 function selectionSort() {
     const comparisons = getSelectionSortComparisons(stateArray)
-    for (let i = 0; i < comparisons.length; i++) {
-        const isColorChange = i % 3 !== 2;
-        if (isColorChange) {
-            const [barOneIdx, barTwoIdx] = comparisons[i];
-            const barOne = group.children[barOneIdx];
-            const barTwo = group.children[barTwoIdx];
-            const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
-            setTimeout(() => {
-                barOne.setColor(color);
-                barTwo.setColor(color);
-            }, i * speed);
-        } else {
-            setTimeout(() => {
-                const [oneIdx, twoIdx] = comparisons[i];
-                //update physical position
-                let oneIdxPosition = group.children[oneIdx].position.x
-                let twoIdxPosition = group.children[twoIdx].position.x
-                moveObject(oneIdxPosition, twoIdxPosition, group.children[oneIdx])
-                moveObject(twoIdxPosition, oneIdxPosition, group.children[twoIdx])
-                // update position within the array 
-                swap(group.children, oneIdx, twoIdx)
-            }, i * speed);
-        }
-    }
+    doComparisonsAndSort(comparisons)
 }
 
 function insertionSort() {
     const comparisons = getInsertionSortComparisons(stateArray)
+    doComparisonsAndSort(comparisons)
+}
+
+function doComparisonsAndSort(comparisons) {
     for (let i = 0; i < comparisons.length; i++) {
         const isColorChange = i % 3 !== 2;
         if (isColorChange) {
@@ -375,9 +310,7 @@ function insertionSort() {
             }, i * speed);
         }
     }
-
 }
-
 
 function moveObject(oldPosition, newPosition, object) {
     const tween = new TWEEN.Tween({ x: oldPosition })
@@ -399,7 +332,6 @@ function replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex) {
     const h = newHeight
     const geometry = new THREE.BoxGeometry(w, h, w);
     const material = new THREE.MeshStandardMaterial({
-        // RGB
         color: new THREE.Color(0, 4, 1),
         side: THREE.DoubleSide,
         // ***** Clipping setup (material): *****
