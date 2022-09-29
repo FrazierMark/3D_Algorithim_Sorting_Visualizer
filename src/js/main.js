@@ -4,6 +4,7 @@ import { getQuickSortComparisons } from './QuickSort';
 import { getBubbleSortComparisons } from './BubbleSort';
 import { getHeapSortComparisons } from './HeapSort';
 import { getSelectionSortComparisons } from './SelectionSort';
+import { getInsertionSortComparisons } from './InsertionSort';
 import * as TWEEN from '@tweenjs/tween.js'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -21,9 +22,11 @@ const quickSortBtn = document.querySelector('.quick_position')
 const bubbleSortBtn = document.querySelector('.bubble_position')
 const heapSortBtn = document.querySelector('.heap_position')
 const selectionSortBtn = document.querySelector('.selection_position')
+const insertionSortBtn = document.querySelector('.insertion_position')
 const speedSlider = document.querySelector('.speed_slider');
 const amountSlider = document.querySelector('.amount_slider')
 
+insertionSortBtn.addEventListener('click', insertionSort)
 mergeSortBtn.addEventListener('click', mergeSort)
 quickSortBtn.addEventListener('click', quickSort)
 bubbleSortBtn.addEventListener('click', bubbleSort)
@@ -344,6 +347,35 @@ function selectionSort() {
             }, i * speed);
         }
     }
+}
+
+function insertionSort() {
+    const comparisons = getInsertionSortComparisons(stateArray)
+    for (let i = 0; i < comparisons.length; i++) {
+        const isColorChange = i % 3 !== 2;
+        if (isColorChange) {
+            const [barOneIdx, barTwoIdx] = comparisons[i];
+            const barOne = group.children[barOneIdx];
+            const barTwo = group.children[barTwoIdx];
+            const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
+            setTimeout(() => {
+                barOne.setColor(color);
+                barTwo.setColor(color);
+            }, i * speed);
+        } else {
+            setTimeout(() => {
+                const [oneIdx, twoIdx] = comparisons[i];
+                //update physical position
+                let oneIdxPosition = group.children[oneIdx].position.x
+                let twoIdxPosition = group.children[twoIdx].position.x
+                moveObject(oneIdxPosition, twoIdxPosition, group.children[oneIdx])
+                moveObject(twoIdxPosition, oneIdxPosition, group.children[twoIdx])
+                // update position within the array 
+                swap(group.children, oneIdx, twoIdx)
+            }, i * speed);
+        }
+    }
+
 }
 
 
