@@ -9,7 +9,6 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 
-import glslify from "glslify"
 
 let ANIMATION_SPEED_MS = 100;
 let BOXES = 100;
@@ -64,41 +63,19 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 window.scene = scene
-//scene.background = new THREE.Color(0xffe3f2fd);
 scene.fog = new THREE.Fog(0xffe3f2fd, 10, 50);
 
 /**
  * Lights
  */
-// const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444);
-// hemiLight.position.set(0, 200, 0);
-// scene.add(hemiLight);
-
-// Ambient light
-const ambientLight = new THREE.AmbientLight(0x222222)
-//gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
-// scene.add(ambientLight)
 
 const dirLight1 = new THREE.DirectionalLight(0xFFA500);
 dirLight1.position.set(1, 10, 1);
-// const helper = new THREE.DirectionalLightHelper(dirLight1, 5);
-// scene.add(helper);
 scene.add(dirLight1);
 
 const dirLight2 = new THREE.DirectionalLight(0xFFE4E4);
 dirLight2.position.set(- 1, 3, 5);
-// const helper2 = new THREE.DirectionalLightHelper(dirLight2, 5);
-// scene.add(helper2);
 scene.add(dirLight2);
-
-
-
-// Ground
-// const ground = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), new THREE.MeshPhongMaterial({ color: 0x999999, depthWrite: false }));
-// ground.rotation.x = - Math.PI / 2;
-// ground.receiveShadow = true;
-// ground.position.set(0, 0.0001, 0)
-// scene.add(ground);
 
 const grid = new THREE.GridHelper(500, 500, 0x000000, 0x000000);
 grid.material.opacity = 0.2;
@@ -113,7 +90,6 @@ scene.add(grid);
 let group = new THREE.Group();
 scene.add(group);
 group.position.z = 0;
-
 
 let stateArray = []
 
@@ -136,10 +112,7 @@ for (let i = 0; i < BOXES; i++) {
         clipShadows: true
     });
 
-
-
     const object = new THREE.Mesh(geometry, material);
-    //let setArrayStart = Math.floor(Boxes)
     object.position.x = (i - (Math.floor(BOXES / 2))) * (w + 0.06);
     object.castShadow = true;
     object.receiveShadow = true;
@@ -211,27 +184,6 @@ const globalPlanes = [globalPlane],
 renderer.clippingPlanes = globalPlanes; // GUI sets it to globalPlanes
 renderer.localClippingEnabled = true;
 
-let folderGlobal = gui.addFolder('Global Clipping'),
-    propsGlobal = {
-
-        get 'Enabled'() {
-            return renderer.clippingPlanes !== Empty;
-        },
-        set 'Enabled'(v) {
-            renderer.clippingPlanes = v ? globalPlanes : Empty;
-        },
-
-        get 'Plane'() {
-            return globalPlane.constant;
-        },
-        set 'Plane'(v) {
-            globalPlane.constant = v;
-        }
-
-    };
-folderGlobal.add(propsGlobal, 'Enabled');
-folderGlobal.add(propsGlobal, 'Plane', - 0.4, 3);
-
 
 /**
  * Animate
@@ -261,7 +213,6 @@ function randomNumFromInterval(min, max) {
 function mergeSort() {
     const comparisons = getMergeSortComparisons(stateArray);
     for (let i = 0; i < comparisons.length; i++) {
-        const arrayBars = group.children
         const isColorChange = i % 3 !== 2;
         if (isColorChange) {
             const [barOneIdx, barTwoIdx] = comparisons[i];
@@ -287,7 +238,6 @@ function mergeSort() {
 function quickSort() {
     const comparisons = getQuickSortComparisons(stateArray)
     for (let i = 0; i < comparisons.length; i++) {
-        const arrayBars = group.children
         const isColorChange = i % 3 !== 2;
         if (isColorChange) {
             const [barOneIdx, barTwoIdx, pivot] = comparisons[i];
@@ -319,7 +269,6 @@ function quickSort() {
 function bubbleSort() {
     const comparisons = getBubbleSortComparisons(stateArray)
     for (let i = 0; i < comparisons.length; i++) {
-        const arrayBars = group.children
         const isColorChange = i % 3 !== 2;
         if (isColorChange) {
             const [barOneIdx, barTwoIdx] = comparisons[i];
@@ -348,7 +297,6 @@ function bubbleSort() {
 function heapSort() {
     const comparisons = getHeapSortComparisons(stateArray)
     for (let i = 0; i < comparisons.length; i++) {
-        const arrayBars = group.children
         const isColorChange = i % 3 !== 2;
         if (isColorChange) {
             const [barOneIdx, barTwoIdx] = comparisons[i];
@@ -377,7 +325,6 @@ function heapSort() {
 function selectionSort() {
     const comparisons = getSelectionSortComparisons(stateArray)
     for (let i = 0; i < comparisons.length; i++) {
-        const arrayBars = group.children
         const isColorChange = i % 3 !== 2;
         if (isColorChange) {
             const [barOneIdx, barTwoIdx] = comparisons[i];

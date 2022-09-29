@@ -15,8 +15,8 @@
 body {
   z-index: 1;
   display: grid;
-  height: 99vh;
-  width: 99vw;
+  height: 98vh;
+  width: 98vw;
   flex-direction: column;
   justify-content: center;
   align-content: center;
