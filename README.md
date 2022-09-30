@@ -7,6 +7,7 @@
     - Bubble Sort
     - Heap Sort
     - Selection Sort
+    - Insertion Sort
 - User can control the length of the array as well as the speed of the sorting animation.
 
 
