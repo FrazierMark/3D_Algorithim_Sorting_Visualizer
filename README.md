@@ -10,7 +10,8 @@
 - User can control the length of the array as well as the speed of the sorting animation.
 
 
-![Screen shot of the Algorithm Visualizer](https://imgur.com/ug3B5jl.png#gh-dark-mode-only)
+![Screen shot of the Algorithm Visualizer Unsorted](https://imgur.com/pCMZ0pN.png#gh-dark-mode-only)
+![Screen shot of the Algorithm Visualizer Sorted](https://imgur.com/rZrzdpW.png#gh-dark-mode-only)
 
 
 ## Techologies Used
@@ -23,7 +24,7 @@
 * NPM
 
 ## Live Link & Getting Started
-* 
+* https://algorithmvisualizer-4346a.web.app/
 
  
 #### To run locally, clone the repository and open the project in your editor
