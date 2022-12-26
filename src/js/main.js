@@ -26,6 +26,8 @@ const insertionSortBtn = document.querySelector('.insertion_position')
 const speedSlider = document.querySelector('.speed_slider');
 const amountSlider = document.querySelector('.amount_slider')
 
+const allButtons = document.getElementsByTagName("button");
+
 insertionSortBtn.addEventListener('click', insertionSort)
 mergeSortBtn.addEventListener('click', mergeSort)
 quickSortBtn.addEventListener('click', quickSort)
@@ -35,6 +37,7 @@ selectionSortBtn.addEventListener('click', selectionSort)
 newArrayBtn.addEventListener('click', newArray)
 speedSlider.addEventListener('input', speedSliderChange);
 amountSlider.addEventListener('input', amountSliderChange)
+
 
 function speedSliderChange() {
     speed = this.value;
@@ -195,6 +198,10 @@ const tick = () => {
 }
 tick()
 
+function disableAllBtns() {
+    Array.from(document.querySelectorAll("button"))
+        .forEach(b => b.disabled = true)
+}
 
 // From https://stackoverflow.com/questions/4959975/generate-random-number-between-two-numbers-in-javascript
 function randomNumFromInterval(min, max) {
@@ -203,6 +210,8 @@ function randomNumFromInterval(min, max) {
 }
 
 function mergeSort() {
+    disableAllBtns()
+
     const comparisons = getMergeSortComparisons(stateArray);
     for (let i = 0; i < comparisons.length; i++) {
         const isColorChange = i % 3 !== 2;
@@ -225,9 +234,19 @@ function mergeSort() {
             }, i * speed);
         }
     }
+    // Delay the call to onAnimationComplete() until after the animation has completed
+    setTimeout(onAnimationComplete, comparisons.length * speed);
+}
+
+function onAnimationComplete() {
+    Array.from(document.querySelectorAll("button"))
+        .forEach(b => b.disabled = false)
 }
 
 function quickSort() {
+    
+    disableAllBtns();
+    
     const comparisons = getQuickSortComparisons(stateArray)
     for (let i = 0; i < comparisons.length; i++) {
         const isColorChange = i % 3 !== 2;
@@ -256,6 +275,8 @@ function quickSort() {
             }, i * speed);
         }
     }
+    // Delay the call to onAnimationComplete() until after the animation has completed
+    setTimeout(onAnimationComplete, comparisons.length * speed);
 }
 
 function bubbleSort() {
@@ -279,6 +300,7 @@ function insertionSort() {
 }
 
 function doComparisonsAndSort(comparisons) {
+    disableAllBtns()
     for (let i = 0; i < comparisons.length; i++) {
         const isColorChange = i % 3 !== 2;
         if (isColorChange) {
@@ -303,6 +325,8 @@ function doComparisonsAndSort(comparisons) {
             }, i * speed);
         }
     }
+    // Delay the call to onAnimationComplete() until after the animation has completed
+    setTimeout(onAnimationComplete, comparisons.length * speed);
 }
 
 // Move the 3D object in x,y,z space to physical location based on sort
@@ -314,6 +338,8 @@ function moveObject(oldPosition, newPosition, object) {
         });
     tween.start()
 }
+
+
 
 // Swap the elements within the main array
 function swap(array, leftIndex, rightIndex) {
@@ -347,6 +373,7 @@ function replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex) {
     }
     group.children.splice(oneIdx, 1, object)
 }
+
 
 function newArray() {
 
@@ -384,4 +411,6 @@ function newArray() {
 
         group.add(object)
     }
+
+    stopAnimationFlag = false
 }
