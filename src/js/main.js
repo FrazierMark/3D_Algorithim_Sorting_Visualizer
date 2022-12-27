@@ -10,7 +10,6 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 //import * as dat from 'lil-gui'
 
-
 let speed = 100;
 let bars = 100;
 const SECONDARY_COLOR = 0x005A5E;
@@ -25,8 +24,6 @@ const selectionSortBtn = document.querySelector('.selection_position')
 const insertionSortBtn = document.querySelector('.insertion_position')
 const speedSlider = document.querySelector('.speed_slider');
 const amountSlider = document.querySelector('.amount_slider')
-
-const allButtons = document.getElementsByTagName("button");
 
 insertionSortBtn.addEventListener('click', insertionSort)
 mergeSortBtn.addEventListener('click', mergeSort)
@@ -54,9 +51,6 @@ function animate(time) {
 }
 requestAnimationFrame(animate)
 
-
-// Debug
-//const gui = new dat.GUI()
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -235,10 +229,10 @@ function mergeSort() {
         }
     }
     // Delay the call to onAnimationComplete() until after the animation has completed
-    setTimeout(onAnimationComplete, comparisons.length * speed);
+    setTimeout(enableAllBtns, comparisons.length * speed);
 }
 
-function onAnimationComplete() {
+function enableAllBtns() {
     Array.from(document.querySelectorAll("button"))
         .forEach(b => b.disabled = false)
 }
@@ -276,7 +270,7 @@ function quickSort() {
         }
     }
     // Delay the call to onAnimationComplete() until after the animation has completed
-    setTimeout(onAnimationComplete, comparisons.length * speed);
+    setTimeout(enableAllBtns, comparisons.length * speed);
 }
 
 function bubbleSort() {
@@ -326,7 +320,7 @@ function doComparisonsAndSort(comparisons) {
         }
     }
     // Delay the call to onAnimationComplete() until after the animation has completed
-    setTimeout(onAnimationComplete, comparisons.length * speed);
+    setTimeout(enableAllBtns, comparisons.length * speed);
 }
 
 // Move the 3D object in x,y,z space to physical location based on sort
@@ -338,7 +332,6 @@ function moveObject(oldPosition, newPosition, object) {
         });
     tween.start()
 }
-
 
 
 // Swap the elements within the main array
@@ -376,7 +369,6 @@ function replaceObjectInGroup(xPosition, oneIdx, newHeight, userIndex) {
 
 
 function newArray() {
-
     while (group.children.length)
         group.remove(group.children[0])
     stateArray = []
@@ -408,9 +400,6 @@ function newArray() {
         object.setColor = function (color) {
             object.material.color.set(color);
         }
-
         group.add(object)
     }
-
-    stopAnimationFlag = false
 }
